@@ -1,0 +1,5 @@
+rootProject.name='Clean App Base'
+include ':app'
+include ':cabdomain'
+include ':cabdata'
+include ':cabpresentation'

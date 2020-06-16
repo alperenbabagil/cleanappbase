@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="model"
+            type="com.alperenbabagil.cleanappbase.main.domain.model.UserListItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:padding="2dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ppIV"
+            app:srcUrl="@{model.ppUrl}"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="10dp"
+            />
+
+        <TextView
+            android:id="@+id/skillTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@{model.skill}"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ppIV"
+            app:layout_constraintTop_toBottomOf="@id/usernameTV"
+            tool:text="Skill" />
+
+        <TextView
+            android:id="@+id/titleTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@{model.title}"
+            android:textColor="@android:color/holo_purple"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ppIV"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="Title" />
+
+        <TextView
+            android:id="@+id/usernameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@{model.username}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ppIV"
+            app:layout_constraintTop_toBottomOf="@id/titleTV"
+            tool:text="NamSurname" />
+
+        <TextView
+            android:id="@+id/birthdateTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:dateField="@{model.birthDate}"
+            app:layout_constraintTop_toBottomOf="@id/ppIV"
+            app:layout_constraintEnd_toEndOf="@id/ppIV"
+            app:layout_constraintStart_toStartOf="@id/ppIV"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tool:text="03.04.1993" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
