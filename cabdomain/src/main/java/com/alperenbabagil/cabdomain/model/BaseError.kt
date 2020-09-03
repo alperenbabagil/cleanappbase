@@ -1,5 +1,5 @@
 package com.alperenbabagil.cabdomain.model
 
-interface BaseError {
+open class BaseError(val exception: Exception?=null) {
     //marker class
 }

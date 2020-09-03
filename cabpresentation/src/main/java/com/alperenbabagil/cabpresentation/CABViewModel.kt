@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alperenbabagil.cabdomain.Interactor
+import com.alperenbabagil.cabdomain.model.BaseError
 import com.alperenbabagil.cabdomain.model.DataHolder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -44,11 +45,11 @@ inline fun <reified ResType : Any, reified ParamType : Interactor.Params> CABVie
 
 //for single retrieve interactors
 inline fun <reified ResType : Any> CABViewModel.execInteractor(liveData: MutableLiveData<DataHolder<ResType>>?=null,
-                                                  singleRetriveInteractor: Interactor.SingleRetrieveInteractor<ResType>,
-                                                  dispatcher: CoroutineDispatcher = Dispatchers.IO,
-                                                  setLoadingTrue: Boolean = true,
-                                                  loadingCancellable: Boolean = false,
-                                                  crossinline interceptorBlock: (dataHolder: DataHolder<ResType>) -> Boolean = { _ -> false }) : Job =
+                                                               singleRetrieveInteractor: Interactor.SingleRetrieveInteractor<ResType>,
+                                                               dispatcher: CoroutineDispatcher = Dispatchers.IO,
+                                                               setLoadingTrue: Boolean = true,
+                                                               loadingCancellable: Boolean = false,
+                                                               crossinline interceptorBlock: (dataHolder: DataHolder<ResType>) -> Boolean = { _ -> false }) : Job =
 
     execInteractorCore(liveData = liveData,
         dispatcher = dispatcher,
@@ -56,7 +57,7 @@ inline fun <reified ResType : Any> CABViewModel.execInteractor(liveData: Mutable
         loadingCancellable = loadingCancellable,
         interceptorBlock = interceptorBlock,
         execMethod = {
-            singleRetriveInteractor.execute()
+            singleRetrieveInteractor.execute()
         }
     )
 
@@ -75,7 +76,7 @@ inline fun <reified ResType : Any> CABViewModel.execInteractorCore(
         val resultOfExecute = try {
             execMethod.invoke()
         } catch (e: Exception) {
-            DataHolder.Fail()
+            DataHolder.Fail(error = BaseError(e))
         }
         jobMap.remove(loadingUUID)
         if (!interceptorBlock.invoke(resultOfExecute))

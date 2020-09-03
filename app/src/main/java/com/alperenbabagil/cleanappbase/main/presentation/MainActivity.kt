@@ -8,14 +8,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alperenbabagil.cabpresentation.observeDataHolder
-import com.alperenbabagil.cabpresentation.showYesNoDialog
 import com.alperenbabagil.cleanappbase.R
-import com.alperenbabagil.cleanappbase.core.presentation.AppNavigator
+import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
 import com.alperenbabagil.cleanappbase.core.presentation.CABDemoBaseActivity
 import com.alperenbabagil.cleanappbase.databinding.UserListItemRowBinding
 import com.alperenbabagil.cleanappbase.main.domain.model.UserListItem
-import com.alperenbabagil.cleanappbase.main.domain.model.UserListRequestType
-import com.alperenbabagil.simpleanimationpopuplibrary.SapDialog
+import com.alperenbabagil.simpleanimationpopuplibrary.showWarningDialog
 import com.otaliastudios.elements.Adapter
 import com.otaliastudios.elements.Element
 import com.otaliastudios.elements.Page
@@ -52,23 +50,25 @@ class MainActivity : CABDemoBaseActivity() {
                 .addPresenter(UserListItemPresenter(this))
                 .into(mainRecyclerView)
         }
+    }
 
+    override fun onStart() {
+        super.onStart()
         askForSuccessOrFail()
-
     }
 
     private fun askForSuccessOrFail(){
-        currentDialog?.dismiss()
-        currentDialog=SapDialog(this).apply {
-            messageText = "Get data from server"
-            animResource= com.alperenbabagil.cabpresentation.R.raw.question_mark
-            addPositiveButton(UserListRequestType.SUCCESS.str){
-                cabViewModel.getUsers(UserListRequestType.SUCCESS)
-            }
-            addNegativeButton(UserListRequestType.FAIL.str){
-                cabViewModel.getUsers(UserListRequestType.FAIL)
-            }
-        }.build().show()
+        showWarningDialog(warningStr = "Get data from server",
+                animRes = R.raw.question_mark,
+                positiveButtonStr = RequestResultType.SUCCESS.str,
+                positiveButtonClick = {
+                    cabViewModel.getUsers(RequestResultType.SUCCESS)
+                },
+                negativeButtonStr = RequestResultType.FAIL.str,
+                negativeButtonClick = {
+                    cabViewModel.getUsers(RequestResultType.FAIL)
+                }
+            )
     }
 
     class UserListItemSource(list: List<UserListItem>) : ListSource<UserListItem>(list){
@@ -77,7 +77,7 @@ class MainActivity : CABDemoBaseActivity() {
 
     class UserListItemPresenter(context: Context) :
         DataBindingPresenter<UserListItem,UserListItemRowBinding>(context,{_,_,element ->
-            ((context as MainActivity).cabNavigator as AppNavigator)
+            (context as CABDemoBaseActivity).getNavigator()
                 .navigateToDetailPage(element.data?.username ?: "",context)
         }){
         override val elementTypes: Collection<Int> = listOf(0)
@@ -97,6 +97,5 @@ class MainActivity : CABDemoBaseActivity() {
             super.onBind(page, holder, binding, element)
             binding.model=element.data
         }
-
     }
 }

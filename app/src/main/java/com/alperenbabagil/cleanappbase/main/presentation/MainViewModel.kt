@@ -5,10 +5,10 @@ import com.alperenbabagil.cabdomain.Interactor
 import com.alperenbabagil.cabdomain.model.DataHolder
 import com.alperenbabagil.cabpresentation.asLiveData
 import com.alperenbabagil.cabpresentation.execInteractor
+import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
 import com.alperenbabagil.cleanappbase.core.presentation.CABDemoBaseViewModel
 import com.alperenbabagil.cleanappbase.main.domain.GetUsersInteractor
 import com.alperenbabagil.cleanappbase.main.domain.model.UserListItem
-import com.alperenbabagil.cleanappbase.main.domain.model.UserListRequestType
 
 class MainViewModel(private val getUsersInteractor:
                     Interactor.SingleInteractor<GetUsersInteractor.Params,List<UserListItem>>)
@@ -17,10 +17,10 @@ class MainViewModel(private val getUsersInteractor:
     private val _usersLiveData= MutableLiveData<DataHolder<List<UserListItem>>>()
     val usersLiveData=_usersLiveData.asLiveData()
 
-    fun getUsers(userListRequestType: UserListRequestType){
+    fun getUsers(requestResultType: RequestResultType){
         execInteractor(_usersLiveData,
             getUsersInteractor,
-            GetUsersInteractor.Params(userListRequestType))
+            GetUsersInteractor.Params(requestResultType))
     }
 
 }

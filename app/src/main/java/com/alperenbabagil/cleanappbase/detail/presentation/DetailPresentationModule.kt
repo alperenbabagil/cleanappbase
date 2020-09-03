@@ -1,6 +1,6 @@
 package com.alperenbabagil.cleanappbase.detail.presentation
 
-import org.koin.dsl.module
+import com.alperenbabagil.cleanappbase.detail.presentation.changepp.changePPPresentationModule
+import com.alperenbabagil.cleanappbase.detail.presentation.profiledetail.profileDetailPresentationModule
 
-val detailPresentationModule = module {
-}
+val detailPresentationModule = profileDetailPresentationModule + changePPPresentationModule

@@ -1,9 +1,9 @@
-package com.alperenbabagil.cleanappbase.main.data.model.responsetemplate
+package com.alperenbabagil.cleanappbase.main.data.model
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Data(
+data class UserListDataTemplate(
     @SerializedName("dateDOB")
     val dateDOB: String?="dateDOB",
     @SerializedName("personSkill")

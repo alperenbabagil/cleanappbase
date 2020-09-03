@@ -4,36 +4,41 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.alperenbabagil.cabdomain.model.DataHolder
-import com.alperenbabagil.cabpresentation.navigation.CABNavigator
 
-interface CABActivity : DialogHolderActivity {
-    val cabNavigator: CABNavigator
+interface CABActivity : DialogHost{
+
 }
 
 fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
-                                    errorBody : (errorStr:String,errorResId:Int) -> Unit,
-                                    errorButtonClick : () -> Unit,
-                                    bypassErrorHandling:Boolean,
-                                    bypassDisableCurrentPopupOnSuccess:Boolean,
-                                    successBody : (data:T) -> Unit
+                                                errorBody : (errorStr:String,errorResId:Int) -> Unit,
+                                                errorButtonClick : () -> Unit,
+                                                bypassErrorHandling:Boolean,
+                                                bypassDisableCurrentPopupOnSuccess:Boolean,
+                                                successBody : (data:T) -> Unit
 
 ){
     if(dataHolder is DataHolder.Success){
-        if(!bypassDisableCurrentPopupOnSuccess) currentDialog?.dismiss()
+        if(!bypassDisableCurrentPopupOnSuccess) dismissCurrentDialog()
         successBody.invoke(dataHolder.data)
     }
 
     if(dataHolder is DataHolder.Fail){
-        currentDialog?.dismiss()
+        dismissCurrentDialog()
         if(bypassErrorHandling){
-            errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
+            errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId ?: -1)
         }
         else{
-            showErrorDialog(dataHolder.errorResourceId,dataHolder.errStr,false,errorButtonClick)
+            showErrorDialog(
+                titleRes = R.string.error,
+                errorRes = dataHolder.errorResourceId?:-1,
+                errorStr = dataHolder.errStr,
+                positiveButtonStrRes = R.string.ok,
+                positiveButtonClick = errorButtonClick
+                )
         }
     }
     if(dataHolder is DataHolder.Loading){
-        currentDialog?.dismiss()
+        dismissCurrentDialog()
         showLoadingDialog(dataHolder = dataHolder)
     }
 }

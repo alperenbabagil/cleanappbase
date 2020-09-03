@@ -19,5 +19,13 @@ sealed class DataHolder<out T: Any> {
                        var cancellable:Boolean=false,
                        var progress: Int=0,
                        var tag:String=UUID.randomUUID().toString()) : DataHolder<Nothing>()
-
 }
+
+fun <T : Any,R : Any>DataHolder<T>.handleSuccess(successBlock :
+                                                 (dataHolder: DataHolder.Success<T>) -> R
+) : DataHolder<R> =
+    when(this){
+        is DataHolder.Success<T> -> DataHolder.Success(successBlock.invoke(this))
+        is DataHolder.Fail -> this
+        is DataHolder.Loading -> this
+    }

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Clean App Base Demo</string>
+    <string name="edit_pp">Edit profile picture</string>
+    <string name="profile_detail">Profile detail</string>
+    <string name="user_name_error">UserName error</string>
+    <string name="cancel">Cancel</string>
+    <string name="userNameKey">UserNameKey</string>
 </resources>

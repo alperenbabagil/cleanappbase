@@ -1,4 +1,4 @@
-package com.alperenbabagil.cleanappbase.main.data.model.responsetemplate
+package com.alperenbabagil.cleanappbase.core.data.model
 
 
 import com.alperenbabagil.cabdomain.CoreDomainConstants
@@ -6,9 +6,9 @@ import com.alperenbabagil.cleanappbase.core.data.CoreDataConstants
 import com.alperenbabagil.cleanappbase.main.data.MainDataConstants
 import com.google.gson.annotations.SerializedName
 
-data class UserListResponseTemplate(
+data class ResponseTemplate<T>(
     @SerializedName("data")
-    var `data`: Data?=Data(),
+    var `data`: T?=null,
     @SerializedName("error")
     var error: Error?=null,
     @SerializedName("status")

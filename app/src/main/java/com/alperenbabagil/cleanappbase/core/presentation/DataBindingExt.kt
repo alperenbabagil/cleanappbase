@@ -6,7 +6,6 @@ import androidx.databinding.BindingAdapter
 import coil.api.load
 import coil.transform.CircleCropTransformation
 import com.alperenbabagil.cleanappbase.R
-import java.text.DateFormat
 import java.util.*
 
 @BindingAdapter("srcUrl")
@@ -23,7 +22,9 @@ fun ImageView.loadCircleImageFromUrl(url: String?){
 @BindingAdapter("dateField")
 fun TextView.setDate(date: Date?){
     date?.let {
-        text=DateFormat.getDateInstance(DateFormat.SHORT).format(date)
+        text=it.toPrettyString()
     }
 }
+
+
 

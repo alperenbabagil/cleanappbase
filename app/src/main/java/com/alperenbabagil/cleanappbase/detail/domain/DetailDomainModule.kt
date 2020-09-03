@@ -1,6 +1,5 @@
 package com.alperenbabagil.cleanappbase.detail.domain
 
-import org.koin.dsl.module
+import com.alperenbabagil.cleanappbase.detail.domain.profiledetail.profileDetailDomainModule
 
-val detailDomainModule = module {
-}
+val detailDomainModule = profileDetailDomainModule

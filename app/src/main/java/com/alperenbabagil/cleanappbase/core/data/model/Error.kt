@@ -1,4 +1,4 @@
-package com.alperenbabagil.cleanappbase.main.data.model.responsetemplate
+package com.alperenbabagil.cleanappbase.core.data.model
 
 
 import com.google.gson.annotations.SerializedName

@@ -2,15 +2,12 @@ package com.alperenbabagil.cleanappbase.core.presentation
 
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
-import com.alperenbabagil.cabpresentation.CABActivity
-import com.alperenbabagil.cabpresentation.CABViewModel
-import com.alperenbabagil.cabpresentation.navigation.CABNavigator
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.alperenbabagil.cabpresentation.CABSAPActivity
+import org.koin.android.ext.android.get
 
-abstract class CABDemoBaseActivity : AppCompatActivity(),CABActivity {
+abstract class CABDemoBaseActivity : AppCompatActivity(), CABSAPActivity,NavigatorOwner {
 
-    override val cabNavigator: CABNavigator by inject()
+    override fun getNavigator(): AppNavigator = get()
 
     override var currentDialog: Dialog?=null
 
