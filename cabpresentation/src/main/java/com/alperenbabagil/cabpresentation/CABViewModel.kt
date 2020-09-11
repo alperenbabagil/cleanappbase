@@ -31,6 +31,7 @@ inline fun <reified ResType : Any, reified ParamType : Interactor.Params> CABVie
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
     setLoadingTrue: Boolean = true,
     loadingCancellable: Boolean = false,
+    loadingUUID: String?=null,
     crossinline interceptorBlock: (dataHolder: DataHolder<ResType>) -> Boolean = { _ -> false }
 ) : Job =
     execInteractorCore(liveData = liveData,
@@ -38,6 +39,7 @@ inline fun <reified ResType : Any, reified ParamType : Interactor.Params> CABVie
         setLoadingTrue = setLoadingTrue,
         loadingCancellable = loadingCancellable,
         interceptorBlock = interceptorBlock,
+        loadingUUID = loadingUUID,
         execMethod = {
             singleInteractor.execute(params)
         }
@@ -49,6 +51,7 @@ inline fun <reified ResType : Any> CABViewModel.execInteractor(liveData: Mutable
                                                                dispatcher: CoroutineDispatcher = Dispatchers.IO,
                                                                setLoadingTrue: Boolean = true,
                                                                loadingCancellable: Boolean = false,
+                                                               loadingUUID: String?=null,
                                                                crossinline interceptorBlock: (dataHolder: DataHolder<ResType>) -> Boolean = { _ -> false }) : Job =
 
     execInteractorCore(liveData = liveData,
@@ -56,6 +59,7 @@ inline fun <reified ResType : Any> CABViewModel.execInteractor(liveData: Mutable
         setLoadingTrue = setLoadingTrue,
         loadingCancellable = loadingCancellable,
         interceptorBlock = interceptorBlock,
+        loadingUUID = loadingUUID,
         execMethod = {
             singleRetrieveInteractor.execute()
         }
@@ -66,11 +70,13 @@ inline fun <reified ResType : Any> CABViewModel.execInteractorCore(
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
     setLoadingTrue: Boolean = true,
     loadingCancellable: Boolean = false,
+    loadingUUID:String?=null,
     crossinline execMethod: suspend () -> DataHolder<ResType>,
     crossinline interceptorBlock: (dataHolder: DataHolder<ResType>) -> Boolean = { _ -> false }
 ): Job {
-    val loadingDataHolder = DataHolder.Loading(cancellable = loadingCancellable)
-    val loadingUUID = loadingDataHolder.tag
+    val loadingDataHolder = loadingUUID?.let { DataHolder.Loading(cancellable = loadingCancellable,
+        tag = it) } ?: DataHolder.Loading(cancellable = loadingCancellable)
+    val loadingTag = loadingDataHolder.tag
     if (setLoadingTrue) liveData?.value = loadingDataHolder
     val job = (this as ViewModel).viewModelScope.launch(dispatcher) {
         val resultOfExecute = try {
@@ -78,11 +84,11 @@ inline fun <reified ResType : Any> CABViewModel.execInteractorCore(
         } catch (e: Exception) {
             DataHolder.Fail(error = BaseError(e))
         }
-        jobMap.remove(loadingUUID)
+        jobMap.remove(loadingTag)
         if (!interceptorBlock.invoke(resultOfExecute))
             liveData?.postValue(resultOfExecute)
     }
-    jobMap[loadingUUID] = job
+    jobMap[loadingTag] = job
     return job
 }
 

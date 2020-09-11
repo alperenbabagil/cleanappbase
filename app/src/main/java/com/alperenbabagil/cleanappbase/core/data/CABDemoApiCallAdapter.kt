@@ -2,6 +2,7 @@ package com.alperenbabagil.cleanappbase.core.data
 
 import com.alperenbabagil.cabdata.ApiCallAdapter
 import com.alperenbabagil.cabdata.model.BaseApiResponse
+import com.alperenbabagil.cabdomain.model.BaseError
 import com.alperenbabagil.cabdomain.model.DataHolder
 import com.alperenbabagil.cleanappbase.core.data.CoreDataConstants.Companion.SERVER_STATUS_FAIL
 import com.alperenbabagil.cleanappbase.core.data.CoreDataConstants.Companion.SERVER_STATUS_SUCCESS
@@ -35,7 +36,7 @@ class CABDemoApiCallAdapter : ApiCallAdapter {
             }?: DataHolder.Fail()
         }
         catch (e:Exception){
-            DataHolder.Fail()
+            DataHolder.Fail(error = BaseError(e))
         }
     }
 }
