@@ -9,7 +9,7 @@ import com.alperenbabagil.cleanappbase.main.domain.model.UserListItem
 class GetUsersInteractor(private val userRepository: UserRepository) :
     BaseSingleInteractor<GetUsersInteractor.Params,List<UserListItem>>() {
 
-    class Params(val requestResultType: RequestResultType) : Interactor.Params()
+    data class Params(val requestResultType: RequestResultType) : Interactor.Params()
 
     override suspend fun executeInteractor(params: Params): DataHolder<List<UserListItem>> =
         userRepository.getUsers(params.requestResultType)

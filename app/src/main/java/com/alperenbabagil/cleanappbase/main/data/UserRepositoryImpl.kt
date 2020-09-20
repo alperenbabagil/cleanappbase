@@ -23,14 +23,14 @@ class UserRepositoryImpl(private val getUsersDataSource:
             : DataHolder<List<UserListItem>> {
         val requestTemplate=when(requestResultType){
             RequestResultType.SUCCESS->{
-                ResponseTemplate<UserListDataTemplate>(data=UserListDataTemplate())
+                ResponseTemplate(data=UserListDataTemplate())
             }
             RequestResultType.FAIL->{
                 ResponseTemplate<UserListDataTemplate>().apply {
                     status=CoreDataConstants.SERVER_STATUS_FAIL
                     data=null
                     error= Error(
-                        31,
+                        7,
                         "Server business error"
                     )
                 }

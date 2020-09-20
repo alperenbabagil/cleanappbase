@@ -10,7 +10,7 @@ import kotlinx.coroutines.delay
 class GetProfileDetailInteractor(private val profileDetailRepository: ProfileDetailRepository) :
     BaseSingleInteractor<GetProfileDetailInteractor.Params, ProfileDetail>()
 {
-    class Params(val userId:String,
+    data class Params(val userId:String,
                  val requestResultType: RequestResultType,
                  val delayMsecs:Long=2000
                  ) : Interactor.Params()

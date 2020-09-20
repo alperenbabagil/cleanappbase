@@ -23,9 +23,5 @@ class ProfileDetailViewModel(private val getProfileDetailInteractor:
             getProfileDetailInteractor,
             GetProfileDetailInteractor.Params(userId,requestResultType,delay)
             )
-
-        execInteractorCore(_profileDetailLiveData,execMethod = {
-            DataHolder.Loading()
-        })
     }
 }

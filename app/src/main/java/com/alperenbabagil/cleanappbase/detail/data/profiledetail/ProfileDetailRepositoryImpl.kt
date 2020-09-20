@@ -30,7 +30,7 @@ class ProfileDetailRepositoryImpl(
                     status= CoreDataConstants.SERVER_STATUS_FAIL
                     data=null
                     error= Error(
-                        31,
+                        7,
                         "Server business error"
                     )
                 }
