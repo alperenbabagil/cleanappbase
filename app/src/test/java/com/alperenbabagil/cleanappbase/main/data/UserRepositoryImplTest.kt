@@ -1,7 +1,7 @@
 package com.alperenbabagil.cleanappbase.main.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.cleanappbase.core.data.BaseDataSource
 import com.alperenbabagil.cleanappbase.core.data.CoreDataConstants
 import com.alperenbabagil.cleanappbase.core.data.model.Error
@@ -57,21 +57,21 @@ internal class UserRepositoryImplTest {
         }
 
         coEvery { dataSource.getResult(any()) } coAnswers {
-            DataHolder.Success(requestList)
+            com.alperenbabagil.dataholder.DataHolder.Success(requestList)
         }
 
         val userRepository = spyk(UserRepositoryImpl(dataSource))
 
-        var resultDH: DataHolder<List<UserListItem>>
+        var resultDH: com.alperenbabagil.dataholder.DataHolder<List<UserListItem>>
 
         runBlocking {
             resultDH =
                 userRepository.getUsers(RequestResultType.SUCCESS)
         }
 
-        assertTrue(resultDH is DataHolder.Success)
+        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Success)
 
-        assertEquals(expectedList, (resultDH as DataHolder.Success).data)
+        assertEquals(expectedList, (resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
 
         val failRequest = ResponseTemplate<UserListDataTemplate>().apply {
             status= CoreDataConstants.SERVER_STATUS_FAIL
@@ -82,10 +82,10 @@ internal class UserRepositoryImplTest {
             )
         }
 
-        val expectedFail = DataHolder.Fail(error = ServerError(serverErrorStr,7))
+        val expectedFail = com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError(serverErrorStr,7))
 
         coEvery { dataSource.getResult(failRequest) } coAnswers {
-            DataHolder.Fail(error = ServerError(serverErrorStr,7))
+            com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError(serverErrorStr,7))
         }
 
         runBlocking {
@@ -93,8 +93,8 @@ internal class UserRepositoryImplTest {
                 userRepository.getUsers(RequestResultType.FAIL)
         }
 
-        assertTrue(resultDH is DataHolder.Fail)
+        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
 
-        assertEquals(expectedFail.error, (resultDH as DataHolder.Fail).error)
+        assertEquals(expectedFail.error, (resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error)
     }
 }

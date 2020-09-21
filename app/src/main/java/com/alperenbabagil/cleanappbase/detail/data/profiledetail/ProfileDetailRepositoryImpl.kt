@@ -1,7 +1,5 @@
 package com.alperenbabagil.cleanappbase.detail.data.profiledetail
 
-import com.alperenbabagil.cabdomain.model.DataHolder
-import com.alperenbabagil.cabdomain.model.handleSuccess
 import com.alperenbabagil.cleanappbase.core.data.BaseDataSource
 import com.alperenbabagil.cleanappbase.core.data.CoreDataConstants
 import com.alperenbabagil.cleanappbase.core.data.model.Error
@@ -12,6 +10,7 @@ import com.alperenbabagil.cleanappbase.detail.data.profiledetail.model.ProfileDe
 import com.alperenbabagil.cleanappbase.detail.data.profiledetail.model.mapToProfileDetail
 import com.alperenbabagil.cleanappbase.detail.domain.profiledetail.ProfileDetailRepository
 import com.alperenbabagil.cleanappbase.detail.domain.profiledetail.model.ProfileDetail
+import com.alperenbabagil.dataholder.handleSuccess
 
 class ProfileDetailRepositoryImpl(
     private val profileDetailNetworkDataSource:
@@ -20,7 +19,7 @@ class ProfileDetailRepositoryImpl(
     override suspend fun getProfileDetail(
         userId: String,
         requestResultType: RequestResultType
-    ): DataHolder<ProfileDetail> {
+    ): com.alperenbabagil.dataholder.DataHolder<ProfileDetail> {
         val requestTemplate=when(requestResultType){
             RequestResultType.SUCCESS->{
                 ResponseTemplate(data= ProfileDetailDataTemplate(userName = userId))

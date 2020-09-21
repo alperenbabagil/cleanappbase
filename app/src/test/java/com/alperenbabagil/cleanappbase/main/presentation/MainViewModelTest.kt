@@ -3,7 +3,7 @@ package com.alperenbabagil.cleanappbase.main.presentation
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.alperenbabagil.cabdomain.Interactor
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.cleanappbase.core.data.model.ServerError
 import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
 import com.alperenbabagil.cleanappbase.main.domain.GetUsersInteractor
@@ -43,11 +43,11 @@ class MainViewModelTest{
         var requestParam = GetUsersInteractor.Params(RequestResultType.SUCCESS)
 
         coEvery { getUsersInteractor.execute(requestParam) } coAnswers {
-            DataHolder.Success(expectedList)}
+            com.alperenbabagil.dataholder.DataHolder.Success(expectedList)}
 
         val mainViewModel = spyk(MainViewModel(getUsersInteractor))
 
-        val valueObserver : Observer<DataHolder<List<UserListItem>>> = mockk(relaxUnitFun = true)
+        val valueObserver : Observer<com.alperenbabagil.dataholder.DataHolder<List<UserListItem>>> = mockk(relaxUnitFun = true)
 
         mainViewModel.usersLiveData.observeForever(valueObserver)
 
@@ -55,16 +55,16 @@ class MainViewModelTest{
             mainViewModel.getUsers(RequestResultType.SUCCESS)
         }
 
-        coVerify {  valueObserver.onChanged(DataHolder.Success(expectedList))}
+        coVerify {  valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(expectedList))}
 
         assertEquals(
             expectedList,
-            (mainViewModel.usersLiveData.value as DataHolder.Success).data
+            (mainViewModel.usersLiveData.value as com.alperenbabagil.dataholder.DataHolder.Success).data
         )
 
         requestParam = GetUsersInteractor.Params(RequestResultType.FAIL)
 
-        val expectedFail = DataHolder.Fail(error = ServerError("serverErrorStr",7))
+        val expectedFail = com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError("serverErrorStr",7))
 
         coEvery { getUsersInteractor.execute(requestParam) } coAnswers {expectedFail}
 
@@ -76,7 +76,7 @@ class MainViewModelTest{
 
         assertEquals(
             expectedFail.error,
-            (mainViewModel.usersLiveData.value as DataHolder.Fail).error
+            (mainViewModel.usersLiveData.value as com.alperenbabagil.dataholder.DataHolder.Fail).error
         )
     }
 }

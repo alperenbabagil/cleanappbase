@@ -2,7 +2,7 @@ package com.alperenbabagil.cabpresentation
 
 import android.app.Activity
 import android.app.Dialog
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.simpleanimationpopuplibrary.SapActivity
 import com.alperenbabagil.simpleanimationpopuplibrary.SapDialog
 
@@ -19,7 +19,7 @@ interface DialogHolderActivity : SapActivity {
 
 fun DialogHolderActivity.showDHLoadingDialog(forceCancellable:Boolean=false,
                                              animRes: Int?=null,
-                                             dataHolder: DataHolder.Loading?=null,
+                                             dataHolder: com.alperenbabagil.dataholder.DataHolder.Loading?=null,
                                              cancelledCallback: () -> Unit ={}
 ){
     (this as? Activity)?.let {

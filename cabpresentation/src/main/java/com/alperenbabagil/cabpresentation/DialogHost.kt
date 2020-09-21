@@ -1,7 +1,7 @@
 package com.alperenbabagil.cabpresentation
 
 import android.app.Dialog
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.simpleanimationpopuplibrary.SapDialog
 
 interface DialogHost {
@@ -10,7 +10,7 @@ interface DialogHost {
 
     fun showLoadingDialog(animRes: Int = R.raw.sap_loading_anim,
                           isCancellable: Boolean = false,
-                          dataHolder: DataHolder.Loading?=null,
+                          dataHolder: com.alperenbabagil.dataholder.DataHolder.Loading?=null,
                           sapCancelEvent: () -> Unit = {})
 
     fun dismissCurrentDialog()

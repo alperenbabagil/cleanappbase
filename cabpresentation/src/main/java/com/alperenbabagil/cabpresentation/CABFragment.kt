@@ -4,14 +4,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 
 interface CABFragment : DialogHost {
 
 }
 
 fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=true,
-                                                dataHolder: DataHolder<T>,
+                                                dataHolder: com.alperenbabagil.dataholder.DataHolder<T>,
                                                 errorBody : (errorStr:String,errorResId:Int) -> Unit,
                                                 errorButtonClick : () -> Unit,
                                                 bypassErrorHandling:Boolean,
@@ -20,7 +20,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
 
 ){
     when(dataHolder){
-        is DataHolder.Success ->{
+        is com.alperenbabagil.dataholder.DataHolder.Success ->{
             if(showDialogsInFragment){
                 if(!bypassDisableCurrentPopupOnSuccess) dismissCurrentDialog()
             }
@@ -31,7 +31,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
             }
             successBody.invoke(dataHolder.data)
         }
-        is DataHolder.Fail ->{
+        is com.alperenbabagil.dataholder.DataHolder.Fail ->{
             if(bypassErrorHandling){
                 errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
             }
@@ -57,7 +57,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                 }
             }
         }
-        is DataHolder.Loading ->{
+        is com.alperenbabagil.dataholder.DataHolder.Loading ->{
             if(showDialogsInFragment){
                 showLoadingDialog(dataHolder = dataHolder)
             }
@@ -70,7 +70,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
 }
 
 fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
-                                           liveData: LiveData<DataHolder<T>>,
+                                           liveData: LiveData<com.alperenbabagil.dataholder.DataHolder<T>>,
                                            errorBody : (errorStr:String,errorResId:Int) -> Unit = {_,_ -> },
                                            errorButtonClick : () -> Unit = {},
                                            bypassErrorHandling:Boolean=false,

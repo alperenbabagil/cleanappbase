@@ -3,13 +3,13 @@ package com.alperenbabagil.cabpresentation
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 
 interface CABActivity : DialogHost{
 
 }
 
-fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
+fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: com.alperenbabagil.dataholder.DataHolder<T>,
                                                 errorBody : (errorStr:String,errorResId:Int) -> Unit,
                                                 errorButtonClick : () -> Unit,
                                                 bypassErrorHandling:Boolean,
@@ -17,12 +17,12 @@ fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                                                 successBody : (data:T) -> Unit
 
 ){
-    if(dataHolder is DataHolder.Success){
+    if(dataHolder is com.alperenbabagil.dataholder.DataHolder.Success){
         if(!bypassDisableCurrentPopupOnSuccess) dismissCurrentDialog()
         successBody.invoke(dataHolder.data)
     }
 
-    if(dataHolder is DataHolder.Fail){
+    if(dataHolder is com.alperenbabagil.dataholder.DataHolder.Fail){
         dismissCurrentDialog()
         if(bypassErrorHandling){
             errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId ?: -1)
@@ -37,18 +37,18 @@ fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                 )
         }
     }
-    if(dataHolder is DataHolder.Loading){
+    if(dataHolder is com.alperenbabagil.dataholder.DataHolder.Loading){
         dismissCurrentDialog()
         showLoadingDialog(dataHolder = dataHolder)
     }
 }
 
-fun <T : Any>CABActivity.observeDataHolder(liveData: LiveData<DataHolder<T>>,
-                               errorBody : (errorStr:String,errorResId:Int) -> Unit = {_,_ -> },
-                               errorButtonClick : () -> Unit = {},
-                               bypassErrorHandling:Boolean=false,
-                               bypassDisableCurrentPopupOnSuccess:Boolean=false,
-                               successBody : (data:T) -> Unit){
+fun <T : Any>CABActivity.observeDataHolder(liveData: LiveData<com.alperenbabagil.dataholder.DataHolder<T>>,
+                                           errorBody : (errorStr:String,errorResId:Int) -> Unit = {_,_ -> },
+                                           errorButtonClick : () -> Unit = {},
+                                           bypassErrorHandling:Boolean=false,
+                                           bypassDisableCurrentPopupOnSuccess:Boolean=false,
+                                           successBody : (data:T) -> Unit){
     liveData.observe(this as LifecycleOwner, Observer {dataHolder ->
         handleDataHolderResult(dataHolder,
             errorBody,

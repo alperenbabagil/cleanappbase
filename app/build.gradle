@@ -67,5 +67,5 @@ dependencies {
     implementation 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.4.10'
 
-    implementation 'com.github.alperenbabagil:imageeditfragment:1.2.1'
+    implementation 'com.github.alperenbabagil:imageeditfragment:1.2.2'
 }

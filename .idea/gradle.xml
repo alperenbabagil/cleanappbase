@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/cabdata" />
             <option value="$PROJECT_DIR$/cabdomain" />
             <option value="$PROJECT_DIR$/cabpresentation" />
+            <option value="$PROJECT_DIR$/dataholder" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

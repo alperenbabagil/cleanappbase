@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.alperenbabagil.cabdomain.Interactor
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.SpyK
@@ -30,9 +30,9 @@ class CABViewModelKtTest{
 
     private val param = object : Interactor.Params(){}
 
-    private val singleLiveData = MutableLiveData<DataHolder<String>>()
+    private val singleLiveData = MutableLiveData<com.alperenbabagil.dataholder.DataHolder<String>>()
 
-    private val singleRetrieveLiveData = MutableLiveData<DataHolder<String>>()
+    private val singleRetrieveLiveData = MutableLiveData<com.alperenbabagil.dataholder.DataHolder<String>>()
 
     @MockK
     lateinit var singleInteractor : Interactor.SingleInteractor<Interactor.Params,String>
@@ -50,9 +50,9 @@ class CABViewModelKtTest{
     @Test
     fun  `single interactor test`(){
 
-        val valueObserver : Observer<DataHolder<String>> = mockk(relaxUnitFun = true)
+        val valueObserver : Observer<com.alperenbabagil.dataholder.DataHolder<String>> = mockk(relaxUnitFun = true)
 
-        coEvery { singleInteractor.execute(param) } coAnswers { DataHolder.Success(singleLiveDataValue) }
+        coEvery { singleInteractor.execute(param) } coAnswers { com.alperenbabagil.dataholder.DataHolder.Success(singleLiveDataValue) }
 
         singleLiveData.observeForever(valueObserver)
 
@@ -64,25 +64,25 @@ class CABViewModelKtTest{
             loadingUUID = loadingUUID
             )
 
-        coVerify { valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })}
+        coVerify { valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Loading().apply { tag=loadingUUID })}
 
-        coVerify {  valueObserver.onChanged(DataHolder.Success(singleLiveDataValue))}
+        coVerify {  valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(singleLiveDataValue))}
 
         verifyOrder {
-            valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })
-            valueObserver.onChanged(DataHolder.Success(singleLiveDataValue))
+            valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Loading().apply { tag=loadingUUID })
+            valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(singleLiveDataValue))
         }
 
-        assertEquals(singleLiveDataValue, (singleLiveData.value as DataHolder.Success).data)
+        assertEquals(singleLiveDataValue, (singleLiveData.value as com.alperenbabagil.dataholder.DataHolder.Success).data)
     }
 
     @Test
     fun  `single retrieve interactor test`(){
 
-        val valueObserver : Observer<DataHolder<String>> = mockk(relaxUnitFun = true)
+        val valueObserver : Observer<com.alperenbabagil.dataholder.DataHolder<String>> = mockk(relaxUnitFun = true)
 
         coEvery { singleRetrieveInteractor.execute() } coAnswers {
-            DataHolder.Success(singleRetrieveLiveDataValue)
+            com.alperenbabagil.dataholder.DataHolder.Success(singleRetrieveLiveDataValue)
         }
 
         singleRetrieveLiveData.observeForever(valueObserver)
@@ -94,16 +94,16 @@ class CABViewModelKtTest{
             loadingUUID = loadingUUID
         )
 
-        coVerify { valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })}
+        coVerify { valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Loading().apply { tag=loadingUUID })}
 
-        coVerify {  valueObserver.onChanged(DataHolder.Success(singleRetrieveLiveDataValue))}
+        coVerify {  valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(singleRetrieveLiveDataValue))}
 
         verifyOrder {
-            valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })
-            valueObserver.onChanged(DataHolder.Success(singleRetrieveLiveDataValue))
+            valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Loading().apply { tag=loadingUUID })
+            valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(singleRetrieveLiveDataValue))
         }
 
         assertEquals(singleRetrieveLiveDataValue,
-            (singleRetrieveLiveData.value as DataHolder.Success).data)
+            (singleRetrieveLiveData.value as com.alperenbabagil.dataholder.DataHolder.Success).data)
     }
 }

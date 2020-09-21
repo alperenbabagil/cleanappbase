@@ -1,4 +1,4 @@
-package com.alperenbabagil.cabdomain
+package com.alperenbabagil.dataholder
 
 class CoreDomainConstants {
     companion object{

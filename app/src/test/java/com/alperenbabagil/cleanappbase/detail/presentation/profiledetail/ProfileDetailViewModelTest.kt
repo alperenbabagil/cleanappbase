@@ -2,7 +2,7 @@ package com.alperenbabagil.cleanappbase.detail.presentation.profiledetail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.cleanappbase.core.data.model.ServerError
 import com.alperenbabagil.cleanappbase.core.domain.BaseSingleInteractor
 import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
@@ -47,11 +47,11 @@ class ProfileDetailViewModelTest{
 
         var requestParam = GetProfileDetailInteractor.Params(userId, RequestResultType.SUCCESS,2000L)
 
-        coEvery { getProfileDetailInteractor.execute(requestParam) } coAnswers { DataHolder.Success(expectedDetail)}
+        coEvery { getProfileDetailInteractor.execute(requestParam) } coAnswers { com.alperenbabagil.dataholder.DataHolder.Success(expectedDetail)}
 
         val profileDetailViewModel = spyk(ProfileDetailViewModel(getProfileDetailInteractor))
 
-        val valueObserver : Observer<DataHolder<ProfileDetail>> = mockk(relaxUnitFun = true)
+        val valueObserver : Observer<com.alperenbabagil.dataholder.DataHolder<ProfileDetail>> = mockk(relaxUnitFun = true)
 
         profileDetailViewModel.profileDetailLiveData.observeForever(valueObserver)
 
@@ -59,16 +59,16 @@ class ProfileDetailViewModelTest{
             profileDetailViewModel.getProfileDetail(userId, RequestResultType.SUCCESS,2000L)
         }
 
-        coVerify {  valueObserver.onChanged(DataHolder.Success(expectedDetail))}
+        coVerify {  valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(expectedDetail))}
 
         Assert.assertEquals(
             expectedDetail,
-            (profileDetailViewModel.profileDetailLiveData.value as DataHolder.Success).data
+            (profileDetailViewModel.profileDetailLiveData.value as com.alperenbabagil.dataholder.DataHolder.Success).data
         )
 
         requestParam = GetProfileDetailInteractor.Params(userId, RequestResultType.FAIL,2000L)
 
-        val expectedFail = DataHolder.Fail(error = ServerError("serverErrorStr",7))
+        val expectedFail = com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError("serverErrorStr",7))
 
         coEvery { getProfileDetailInteractor.execute(requestParam) } coAnswers {expectedFail}
 
@@ -80,7 +80,7 @@ class ProfileDetailViewModelTest{
 
         Assert.assertEquals(
             expectedFail.error,
-            (profileDetailViewModel.profileDetailLiveData.value as DataHolder.Fail).error
+            (profileDetailViewModel.profileDetailLiveData.value as com.alperenbabagil.dataholder.DataHolder.Fail).error
         )
 
 

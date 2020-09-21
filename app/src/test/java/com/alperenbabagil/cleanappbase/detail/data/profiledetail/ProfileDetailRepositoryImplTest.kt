@@ -1,7 +1,7 @@
 package com.alperenbabagil.cleanappbase.detail.data.profiledetail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.cleanappbase.core.data.BaseDataSource
 import com.alperenbabagil.cleanappbase.core.data.CoreDataConstants
 import com.alperenbabagil.cleanappbase.core.data.model.Error
@@ -68,21 +68,21 @@ class ProfileDetailRepositoryImplTest {
         )
 
         coEvery { dataSource.getResult(request) } coAnswers {
-            DataHolder.Success(profileDetailNetworkDTO)
+            com.alperenbabagil.dataholder.DataHolder.Success(profileDetailNetworkDTO)
         }
 
         val profileDetailRepositoryImpl = spyk(ProfileDetailRepositoryImpl(dataSource))
 
-        var resultDH: DataHolder<ProfileDetail>
+        var resultDH: com.alperenbabagil.dataholder.DataHolder<ProfileDetail>
 
         runBlocking {
             resultDH =
                 profileDetailRepositoryImpl.getProfileDetail(userName, RequestResultType.SUCCESS)
         }
 
-        assertTrue(resultDH is DataHolder.Success)
+        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Success)
 
-        assertEquals(expectedDetail, (resultDH as DataHolder.Success).data)
+        assertEquals(expectedDetail, (resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
 
         val failRequest = ResponseTemplate<ProfileDetailDataTemplate>().apply {
             status= CoreDataConstants.SERVER_STATUS_FAIL
@@ -93,10 +93,10 @@ class ProfileDetailRepositoryImplTest {
             )
         }
 
-        val expectedFail = DataHolder.Fail(error = ServerError(serverErrorStr,7))
+        val expectedFail = com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError(serverErrorStr,7))
 
         coEvery { dataSource.getResult(failRequest) } coAnswers {
-            DataHolder.Fail(error = ServerError(serverErrorStr,7))
+            com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError(serverErrorStr,7))
         }
 
         runBlocking {
@@ -104,9 +104,9 @@ class ProfileDetailRepositoryImplTest {
                 profileDetailRepositoryImpl.getProfileDetail(userName, RequestResultType.FAIL)
         }
 
-        assertTrue(resultDH is DataHolder.Fail)
+        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
 
-        assertEquals(expectedFail.error, (resultDH as DataHolder.Fail).error)
+        assertEquals(expectedFail.error, (resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error)
 
     }
 }

@@ -1,7 +1,7 @@
 package com.alperenbabagil.cabpresentation
 
 import androidx.fragment.app.Fragment
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.simpleanimationpopuplibrary.SapFragment
 import com.alperenbabagil.simpleanimationpopuplibrary.removeCurrentDialog
 import com.alperenbabagil.simpleanimationpopuplibrary.showLoadingDialog as fragmentLoading
@@ -14,8 +14,8 @@ interface DialogHolderFragment : SapFragment {
 }
 
 fun DialogHolderFragment.showDHLoadingDialog(forceCancellable:Boolean=false,
-                                           dataHolder: DataHolder.Loading?=null,
-                                           cancelledCallback: () -> Unit ={}
+                                             dataHolder: com.alperenbabagil.dataholder.DataHolder.Loading?=null,
+                                             cancelledCallback: () -> Unit ={}
 ){
     (this as? Fragment)?.let {
         var isCancellable=dataHolder?.cancellable ?:false

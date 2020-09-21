@@ -1,7 +1,7 @@
-package com.alperenbabagil.cabdomain.model
+package com.alperenbabagil.dataholder
 
-import com.alperenbabagil.cabdomain.CoreDomainConstants.Companion.DEFAULT_ERROR_STR
-import com.alperenbabagil.cabdomain.CoreDomainConstants.Companion.DEFAULT_LOADING_STR
+import com.alperenbabagil.dataholder.CoreDomainConstants.Companion.DEFAULT_ERROR_STR
+import com.alperenbabagil.dataholder.CoreDomainConstants.Companion.DEFAULT_LOADING_STR
 import java.util.*
 
 
@@ -21,7 +21,7 @@ sealed class DataHolder<out T: Any> {
                        var tag:String=UUID.randomUUID().toString()) : DataHolder<Nothing>()
 }
 
-fun <T : Any,R : Any>DataHolder<T>.handleSuccess(successBlock :
+fun <T : Any,R : Any> DataHolder<T>.handleSuccess(successBlock :
                                                  (dataHolder: DataHolder.Success<T>) -> R
 ) : DataHolder<R> =
     when(this){

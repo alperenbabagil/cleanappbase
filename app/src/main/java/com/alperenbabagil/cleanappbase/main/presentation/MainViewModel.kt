@@ -2,7 +2,6 @@ package com.alperenbabagil.cleanappbase.main.presentation
 
 import androidx.lifecycle.MutableLiveData
 import com.alperenbabagil.cabdomain.Interactor
-import com.alperenbabagil.cabdomain.model.DataHolder
 import com.alperenbabagil.cabpresentation.asLiveData
 import com.alperenbabagil.cabpresentation.execInteractor
 import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
@@ -14,7 +13,7 @@ class MainViewModel(private val getUsersInteractor:
                     Interactor.SingleInteractor<GetUsersInteractor.Params,List<UserListItem>>)
     : CABDemoBaseViewModel() {
 
-    private val _usersLiveData= MutableLiveData<DataHolder<List<UserListItem>>>()
+    private val _usersLiveData= MutableLiveData<com.alperenbabagil.dataholder.DataHolder<List<UserListItem>>>()
     val usersLiveData=_usersLiveData.asLiveData()
 
     fun getUsers(requestResultType: RequestResultType){

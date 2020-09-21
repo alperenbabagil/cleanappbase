@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alperenbabagil.cabdomain.Interactor
-import com.alperenbabagil.cabdomain.model.BaseError
-import com.alperenbabagil.cabdomain.model.DataHolder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -25,14 +23,14 @@ fun CABViewModel.loadingCancelled(loadingDataHolderTag: String) {
 
 //for single interactors
 inline fun <reified ResType : Any, reified ParamType : Interactor.Params> CABViewModel.execInteractor(
-    liveData: MutableLiveData<DataHolder<ResType>>?=null,
+    liveData: MutableLiveData<com.alperenbabagil.dataholder.DataHolder<ResType>>?=null,
     singleInteractor: Interactor.SingleInteractor<ParamType, ResType>,
     params: ParamType,
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
     setLoadingTrue: Boolean = true,
     loadingCancellable: Boolean = false,
     loadingUUID: String?=null,
-    crossinline interceptorBlock: (dataHolder: DataHolder<ResType>) -> Boolean = { _ -> false }
+    crossinline interceptorBlock: (dataHolder: com.alperenbabagil.dataholder.DataHolder<ResType>) -> Boolean = { _ -> false }
 ) : Job =
     execInteractorCore(liveData = liveData,
         dispatcher = dispatcher,
@@ -46,13 +44,13 @@ inline fun <reified ResType : Any, reified ParamType : Interactor.Params> CABVie
     )
 
 //for single retrieve interactors
-inline fun <reified ResType : Any> CABViewModel.execInteractor(liveData: MutableLiveData<DataHolder<ResType>>?=null,
+inline fun <reified ResType : Any> CABViewModel.execInteractor(liveData: MutableLiveData<com.alperenbabagil.dataholder.DataHolder<ResType>>?=null,
                                                                singleRetrieveInteractor: Interactor.SingleRetrieveInteractor<ResType>,
                                                                dispatcher: CoroutineDispatcher = Dispatchers.IO,
                                                                setLoadingTrue: Boolean = true,
                                                                loadingCancellable: Boolean = false,
                                                                loadingUUID: String?=null,
-                                                               crossinline interceptorBlock: (dataHolder: DataHolder<ResType>) -> Boolean = { _ -> false }) : Job =
+                                                               crossinline interceptorBlock: (dataHolder: com.alperenbabagil.dataholder.DataHolder<ResType>) -> Boolean = { _ -> false }) : Job =
 
     execInteractorCore(liveData = liveData,
         dispatcher = dispatcher,
@@ -66,23 +64,26 @@ inline fun <reified ResType : Any> CABViewModel.execInteractor(liveData: Mutable
     )
 
 inline fun <reified ResType : Any> CABViewModel.execInteractorCore(
-    liveData: MutableLiveData<DataHolder<ResType>>?=null,
+    liveData: MutableLiveData<com.alperenbabagil.dataholder.DataHolder<ResType>>?=null,
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
     setLoadingTrue: Boolean = true,
     loadingCancellable: Boolean = false,
     loadingUUID:String?=null,
-    crossinline execMethod: suspend () -> DataHolder<ResType>,
-    crossinline interceptorBlock: (dataHolder: DataHolder<ResType>) -> Boolean = { _ -> false }
+    crossinline execMethod: suspend () -> com.alperenbabagil.dataholder.DataHolder<ResType>,
+    crossinline interceptorBlock: (dataHolder: com.alperenbabagil.dataholder.DataHolder<ResType>) -> Boolean = { _ -> false }
 ): Job {
-    val loadingDataHolder = loadingUUID?.let { DataHolder.Loading(cancellable = loadingCancellable,
-        tag = it) } ?: DataHolder.Loading(cancellable = loadingCancellable)
+    val loadingDataHolder = loadingUUID?.let { com.alperenbabagil.dataholder.DataHolder.Loading(cancellable = loadingCancellable,
+        tag = it) } ?: com.alperenbabagil.dataholder.DataHolder.Loading(cancellable = loadingCancellable)
     val loadingTag = loadingDataHolder.tag
     if (setLoadingTrue) liveData?.value = loadingDataHolder
     val job = (this as ViewModel).viewModelScope.launch(dispatcher) {
         val resultOfExecute = try {
             execMethod.invoke()
         } catch (e: Exception) {
-            DataHolder.Fail(error = BaseError(e))
+            com.alperenbabagil.dataholder.DataHolder.Fail(error = com.alperenbabagil.dataholder.BaseError(
+                e
+            )
+            )
         }
         jobMap.remove(loadingTag)
         if (!interceptorBlock.invoke(resultOfExecute))
@@ -92,5 +93,5 @@ inline fun <reified ResType : Any> CABViewModel.execInteractorCore(
     return job
 }
 
-fun <T> MutableLiveData<T>.asLiveData():LiveData<T> = this as LiveData<T>
+fun <T> MutableLiveData<T>.asLiveData(): LiveData<T> = this as LiveData<T>
 

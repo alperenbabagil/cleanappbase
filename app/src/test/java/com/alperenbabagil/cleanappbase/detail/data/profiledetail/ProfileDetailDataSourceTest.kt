@@ -2,7 +2,7 @@ package com.alperenbabagil.cleanappbase.detail.data.profiledetail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.alperenbabagil.cabdata.ApiCallAdapter
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.cleanappbase.core.data.CABDemoApiCallAdapter
 import com.alperenbabagil.cleanappbase.core.data.CoreDataConstants
 import com.alperenbabagil.cleanappbase.core.data.model.BaseRequest
@@ -58,22 +58,22 @@ class ProfileDetailDataSourceTest {
             )
 
         coEvery { apiCallAdapter.adapt<ProfileDetailNetworkDTO>(any())  } coAnswers {
-            DataHolder.Success(expectedProfileDetailNetworkDTO)
+            com.alperenbabagil.dataholder.DataHolder.Success(expectedProfileDetailNetworkDTO)
         }
 
         var profileDetailDataSource = spyk(ProfileDetailDataSource(profileService,apiCallAdapter))
 
-        var resultDH: DataHolder<ProfileDetailNetworkDTO>
+        var resultDH: com.alperenbabagil.dataholder.DataHolder<ProfileDetailNetworkDTO>
 
         runBlocking {
             resultDH=profileDetailDataSource.getDataSourceResult(request)
         }
 
         // Testing against adapter
-        assertTrue(resultDH is DataHolder.Success)
-        assertEquals(expectedProfileDetailNetworkDTO,(resultDH as DataHolder.Success).data)
+        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Success)
+        assertEquals(expectedProfileDetailNetworkDTO,(resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
 
-        val expectedError = DataHolder.Fail(errStr = "expectedErr",error = ServerError("servErr",7))
+        val expectedError = com.alperenbabagil.dataholder.DataHolder.Fail(errStr = "expectedErr",error = ServerError("servErr",7))
 
         coEvery { apiCallAdapter.adapt<ProfileDetailNetworkDTO>(any())  } coAnswers {
             expectedError
@@ -84,9 +84,9 @@ class ProfileDetailDataSourceTest {
         }
 
         // Testing against adapter
-        assertTrue(resultDH is DataHolder.Fail)
-        assertEquals(expectedError.errStr,(resultDH as DataHolder.Fail).errStr)
-        assertEquals(expectedError.error,(resultDH as DataHolder.Fail).error)
+        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertEquals(expectedError.errStr,(resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).errStr)
+        assertEquals(expectedError.error,(resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error)
 
 
         val adapterInstance = spyk(CABDemoApiCallAdapter())
@@ -110,7 +110,7 @@ class ProfileDetailDataSourceTest {
             resultDH=profileDetailDataSource.getDataSourceResult(request)
         }
 
-        assertEquals(expectedProfileDetailNetworkDTO,(resultDH as DataHolder.Success).data)
+        assertEquals(expectedProfileDetailNetworkDTO,(resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
 
         val expectedServerError = ServerError("profileDetailError",7)
         coEvery { response.body() } coAnswers {
@@ -121,8 +121,8 @@ class ProfileDetailDataSourceTest {
             resultDH=profileDetailDataSource.getDataSourceResult(request)
         }
 
-        assertTrue(resultDH is DataHolder.Fail)
-        assertEquals(expectedServerError,(resultDH as DataHolder.Fail).error)
+        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertEquals(expectedServerError,(resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error)
 
     }
 }

@@ -1,7 +1,7 @@
 package com.alperenbabagil.cleanappbase.detail.data.profiledetail
 
 import com.alperenbabagil.cabdata.ApiCallAdapter
-import com.alperenbabagil.cabdomain.model.DataHolder
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.cleanappbase.core.data.BaseDataSource
 import com.alperenbabagil.cleanappbase.core.data.model.BaseRequest
 import com.alperenbabagil.cleanappbase.core.data.model.ResponseTemplate
@@ -15,7 +15,7 @@ class ProfileDetailDataSource(
 ) : BaseDataSource<ResponseTemplate<ProfileDetailDataTemplate>, ProfileDetailNetworkDTO>() {
 
     override suspend fun getDataSourceResult(request: BaseRequest<ResponseTemplate<ProfileDetailDataTemplate>>):
-            DataHolder<ProfileDetailNetworkDTO> = apiCallAdapter.adapt {
+            com.alperenbabagil.dataholder.DataHolder<ProfileDetailNetworkDTO> = apiCallAdapter.adapt {
         profileService.getProfileDetail(request)
     }
 
