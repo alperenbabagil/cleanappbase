@@ -44,9 +44,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(":cabdata")
-    implementation project(":cabdomain")
-    implementation project(":cabpresentation")
+    implementation "com.github.alperenbabagil.cleanappbase:cabdata:$library_version"
+    implementation "com.github.alperenbabagil.cleanappbase:cabdomain:$library_version"
+    implementation "com.github.alperenbabagil.cleanappbase:cabpresentation:$library_version"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
     implementation 'androidx.appcompat:appcompat:1.2.0'
