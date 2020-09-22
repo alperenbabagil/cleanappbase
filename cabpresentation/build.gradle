@@ -34,7 +34,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.github.alperenbabagil.cleanappbase:cabdomain:$library_version"
+    implementation project(":cabdomain")
     testImplementation 'junit:junit:4.13'
     testImplementation "io.mockk:mockk:1.10.0"
     testImplementation "androidx.arch.core:core-testing:2.1.0"
