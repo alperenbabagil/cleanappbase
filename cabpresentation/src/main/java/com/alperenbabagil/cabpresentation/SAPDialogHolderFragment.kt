@@ -14,7 +14,7 @@ interface DialogHolderFragment : SapFragment {
 }
 
 fun DialogHolderFragment.showDHLoadingDialog(forceCancellable:Boolean=false,
-                                             dataHolder: com.alperenbabagil.dataholder.DataHolder.Loading?=null,
+                                             dataHolder: DataHolder.Loading?=null,
                                              cancelledCallback: () -> Unit ={}
 ){
     (this as? Fragment)?.let {

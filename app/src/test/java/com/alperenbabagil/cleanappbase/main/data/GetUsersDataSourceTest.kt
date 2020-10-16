@@ -53,22 +53,22 @@ class GetUsersDataSourceTest {
         }
 
         coEvery { apiCallAdapter.adapt<List<UserListItemNetworkDTO>>(any())  } coAnswers {
-            com.alperenbabagil.dataholder.DataHolder.Success(expectedList)
+            DataHolder.Success(expectedList)
         }
 
         var getUsersDataSource = spyk(GetUsersDataSource(userService,apiCallAdapter))
 
-        var resultDH: com.alperenbabagil.dataholder.DataHolder<List<UserListItemNetworkDTO>>
+        var resultDH: DataHolder<List<UserListItemNetworkDTO>>
 
         runBlocking {
             resultDH=getUsersDataSource.getDataSourceResult(request)
         }
 
         // Testing against adapter
-        Assert.assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Success)
-        Assert.assertEquals(expectedList, (resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
+        Assert.assertTrue(resultDH is DataHolder.Success)
+        Assert.assertEquals(expectedList, (resultDH as DataHolder.Success).data)
 
-        val expectedError = com.alperenbabagil.dataholder.DataHolder.Fail(errStr = "expectedErr",error = ServerError("servErr",7))
+        val expectedError = DataHolder.Fail(errStr = "expectedErr",error = ServerError("servErr",7))
 
         coEvery { apiCallAdapter.adapt<List<UserListItemNetworkDTO>>(any())  } coAnswers {
             expectedError
@@ -79,9 +79,9 @@ class GetUsersDataSourceTest {
         }
 
         // Testing against adapter
-        Assert.assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
-        Assert.assertEquals(expectedError.errStr, (resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).errStr)
-        Assert.assertEquals(expectedError.error, (resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error)
+        Assert.assertTrue(resultDH is DataHolder.Fail)
+        Assert.assertEquals(expectedError.errStr, (resultDH as DataHolder.Fail).errStr)
+        Assert.assertEquals(expectedError.error, (resultDH as DataHolder.Fail).error)
 
 
         val adapterInstance = spyk(CABDemoApiCallAdapter())
@@ -105,7 +105,7 @@ class GetUsersDataSourceTest {
             resultDH=getUsersDataSource.getDataSourceResult(request)
         }
 
-        Assert.assertEquals(expectedList, (resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
+        Assert.assertEquals(expectedList, (resultDH as DataHolder.Success).data)
 
         val expectedServerError = ServerError("profileDetailError",7)
         coEvery { response.body() } coAnswers {
@@ -117,8 +117,8 @@ class GetUsersDataSourceTest {
             resultDH=getUsersDataSource.getDataSourceResult(request)
         }
 
-        Assert.assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
-        Assert.assertEquals(expectedServerError, (resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error)
+        Assert.assertTrue(resultDH is DataHolder.Fail)
+        Assert.assertEquals(expectedServerError, (resultDH as DataHolder.Fail).error)
 
     }
 }

@@ -57,21 +57,21 @@ internal class UserRepositoryImplTest {
         }
 
         coEvery { dataSource.getResult(any()) } coAnswers {
-            com.alperenbabagil.dataholder.DataHolder.Success(requestList)
+            DataHolder.Success(requestList)
         }
 
         val userRepository = spyk(UserRepositoryImpl(dataSource))
 
-        var resultDH: com.alperenbabagil.dataholder.DataHolder<List<UserListItem>>
+        var resultDH: DataHolder<List<UserListItem>>
 
         runBlocking {
             resultDH =
                 userRepository.getUsers(RequestResultType.SUCCESS)
         }
 
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Success)
+        assertTrue(resultDH is DataHolder.Success)
 
-        assertEquals(expectedList, (resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
+        assertEquals(expectedList, (resultDH as DataHolder.Success).data)
 
         val failRequest = ResponseTemplate<UserListDataTemplate>().apply {
             status= CoreDataConstants.SERVER_STATUS_FAIL
@@ -82,10 +82,10 @@ internal class UserRepositoryImplTest {
             )
         }
 
-        val expectedFail = com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError(serverErrorStr,7))
+        val expectedFail = DataHolder.Fail(error = ServerError(serverErrorStr,7))
 
         coEvery { dataSource.getResult(failRequest) } coAnswers {
-            com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError(serverErrorStr,7))
+            DataHolder.Fail(error = ServerError(serverErrorStr,7))
         }
 
         runBlocking {
@@ -93,8 +93,8 @@ internal class UserRepositoryImplTest {
                 userRepository.getUsers(RequestResultType.FAIL)
         }
 
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertTrue(resultDH is DataHolder.Fail)
 
-        assertEquals(expectedFail.error, (resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error)
+        assertEquals(expectedFail.error, (resultDH as DataHolder.Fail).error)
     }
 }

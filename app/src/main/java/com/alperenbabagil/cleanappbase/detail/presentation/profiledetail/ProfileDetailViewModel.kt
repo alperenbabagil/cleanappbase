@@ -8,12 +8,13 @@ import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
 import com.alperenbabagil.cleanappbase.core.presentation.CABDemoBaseViewModel
 import com.alperenbabagil.cleanappbase.detail.domain.profiledetail.GetProfileDetailInteractor
 import com.alperenbabagil.cleanappbase.detail.domain.profiledetail.model.ProfileDetail
+import com.alperenbabagil.dataholder.DataHolder
 
 class ProfileDetailViewModel(private val getProfileDetailInteractor:
                              BaseSingleInteractor<GetProfileDetailInteractor.Params, ProfileDetail>) :
     CABDemoBaseViewModel() {
 
-    private val _profileDetailLiveData = MutableLiveData<com.alperenbabagil.dataholder.DataHolder<ProfileDetail>>()
+    private val _profileDetailLiveData = MutableLiveData<DataHolder<ProfileDetail>>()
     val profileDetailLiveData = _profileDetailLiveData.asLiveData()
 
     fun getProfileDetail(userId:String,requestResultType: RequestResultType,delay:Long){

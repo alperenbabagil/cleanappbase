@@ -68,21 +68,21 @@ class ProfileDetailRepositoryImplTest {
         )
 
         coEvery { dataSource.getResult(request) } coAnswers {
-            com.alperenbabagil.dataholder.DataHolder.Success(profileDetailNetworkDTO)
+            DataHolder.Success(profileDetailNetworkDTO)
         }
 
         val profileDetailRepositoryImpl = spyk(ProfileDetailRepositoryImpl(dataSource))
 
-        var resultDH: com.alperenbabagil.dataholder.DataHolder<ProfileDetail>
+        var resultDH: DataHolder<ProfileDetail>
 
         runBlocking {
             resultDH =
                 profileDetailRepositoryImpl.getProfileDetail(userName, RequestResultType.SUCCESS)
         }
 
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Success)
+        assertTrue(resultDH is DataHolder.Success)
 
-        assertEquals(expectedDetail, (resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
+        assertEquals(expectedDetail, (resultDH as DataHolder.Success).data)
 
         val failRequest = ResponseTemplate<ProfileDetailDataTemplate>().apply {
             status= CoreDataConstants.SERVER_STATUS_FAIL
@@ -93,10 +93,10 @@ class ProfileDetailRepositoryImplTest {
             )
         }
 
-        val expectedFail = com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError(serverErrorStr,7))
+        val expectedFail = DataHolder.Fail(error = ServerError(serverErrorStr,7))
 
         coEvery { dataSource.getResult(failRequest) } coAnswers {
-            com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError(serverErrorStr,7))
+            DataHolder.Fail(error = ServerError(serverErrorStr,7))
         }
 
         runBlocking {
@@ -104,9 +104,9 @@ class ProfileDetailRepositoryImplTest {
                 profileDetailRepositoryImpl.getProfileDetail(userName, RequestResultType.FAIL)
         }
 
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertTrue(resultDH is DataHolder.Fail)
 
-        assertEquals(expectedFail.error, (resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error)
+        assertEquals(expectedFail.error, (resultDH as DataHolder.Fail).error)
 
     }
 }

@@ -19,7 +19,7 @@ interface DialogHolderActivity : SapActivity {
 
 fun DialogHolderActivity.showDHLoadingDialog(forceCancellable:Boolean=false,
                                              animRes: Int?=null,
-                                             dataHolder: com.alperenbabagil.dataholder.DataHolder.Loading?=null,
+                                             dataHolder: DataHolder.Loading?=null,
                                              cancelledCallback: () -> Unit ={}
 ){
     (this as? Activity)?.let {
