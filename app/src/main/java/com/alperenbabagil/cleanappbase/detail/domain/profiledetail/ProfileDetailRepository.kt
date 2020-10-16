@@ -8,5 +8,5 @@ interface ProfileDetailRepository {
 
     suspend fun getProfileDetail(userId:String,
                                  requestResultType: RequestResultType) :
-            com.alperenbabagil.dataholder.DataHolder<ProfileDetail>
+            DataHolder<ProfileDetail>
 }

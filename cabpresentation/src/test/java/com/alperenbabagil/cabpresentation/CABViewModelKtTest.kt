@@ -30,9 +30,9 @@ class CABViewModelKtTest{
 
     private val param = object : Interactor.Params(){}
 
-    private val singleLiveData = MutableLiveData<com.alperenbabagil.dataholder.DataHolder<String>>()
+    private val singleLiveData = MutableLiveData<DataHolder<String>>()
 
-    private val singleRetrieveLiveData = MutableLiveData<com.alperenbabagil.dataholder.DataHolder<String>>()
+    private val singleRetrieveLiveData = MutableLiveData<DataHolder<String>>()
 
     @MockK
     lateinit var singleInteractor : Interactor.SingleInteractor<Interactor.Params,String>
@@ -50,9 +50,9 @@ class CABViewModelKtTest{
     @Test
     fun  `single interactor test`(){
 
-        val valueObserver : Observer<com.alperenbabagil.dataholder.DataHolder<String>> = mockk(relaxUnitFun = true)
+        val valueObserver : Observer<DataHolder<String>> = mockk(relaxUnitFun = true)
 
-        coEvery { singleInteractor.execute(param) } coAnswers { com.alperenbabagil.dataholder.DataHolder.Success(singleLiveDataValue) }
+        coEvery { singleInteractor.execute(param) } coAnswers { DataHolder.Success(singleLiveDataValue) }
 
         singleLiveData.observeForever(valueObserver)
 
@@ -64,25 +64,25 @@ class CABViewModelKtTest{
             loadingUUID = loadingUUID
             )
 
-        coVerify { valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Loading().apply { tag=loadingUUID })}
+        coVerify { valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })}
 
-        coVerify {  valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(singleLiveDataValue))}
+        coVerify {  valueObserver.onChanged(DataHolder.Success(singleLiveDataValue))}
 
         verifyOrder {
-            valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Loading().apply { tag=loadingUUID })
-            valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(singleLiveDataValue))
+            valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })
+            valueObserver.onChanged(DataHolder.Success(singleLiveDataValue))
         }
 
-        assertEquals(singleLiveDataValue, (singleLiveData.value as com.alperenbabagil.dataholder.DataHolder.Success).data)
+        assertEquals(singleLiveDataValue, (singleLiveData.value as DataHolder.Success).data)
     }
 
     @Test
     fun  `single retrieve interactor test`(){
 
-        val valueObserver : Observer<com.alperenbabagil.dataholder.DataHolder<String>> = mockk(relaxUnitFun = true)
+        val valueObserver : Observer<DataHolder<String>> = mockk(relaxUnitFun = true)
 
         coEvery { singleRetrieveInteractor.execute() } coAnswers {
-            com.alperenbabagil.dataholder.DataHolder.Success(singleRetrieveLiveDataValue)
+            DataHolder.Success(singleRetrieveLiveDataValue)
         }
 
         singleRetrieveLiveData.observeForever(valueObserver)
@@ -94,16 +94,16 @@ class CABViewModelKtTest{
             loadingUUID = loadingUUID
         )
 
-        coVerify { valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Loading().apply { tag=loadingUUID })}
+        coVerify { valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })}
 
-        coVerify {  valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(singleRetrieveLiveDataValue))}
+        coVerify {  valueObserver.onChanged(DataHolder.Success(singleRetrieveLiveDataValue))}
 
         verifyOrder {
-            valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Loading().apply { tag=loadingUUID })
-            valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(singleRetrieveLiveDataValue))
+            valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })
+            valueObserver.onChanged(DataHolder.Success(singleRetrieveLiveDataValue))
         }
 
         assertEquals(singleRetrieveLiveDataValue,
-            (singleRetrieveLiveData.value as com.alperenbabagil.dataholder.DataHolder.Success).data)
+            (singleRetrieveLiveData.value as DataHolder.Success).data)
     }
 }

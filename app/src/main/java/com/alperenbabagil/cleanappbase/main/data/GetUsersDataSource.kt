@@ -13,7 +13,7 @@ class GetUsersDataSource(private val userService: UserService,
     BaseDataSource<ResponseTemplate<UserListDataTemplate>,List<UserListItemNetworkDTO>>() {
 
     override suspend fun getDataSourceResult(request: BaseRequest<ResponseTemplate<UserListDataTemplate>>):
-            com.alperenbabagil.dataholder.DataHolder<List<UserListItemNetworkDTO>> =
+            DataHolder<List<UserListItemNetworkDTO>> =
         apiCallAdapter.adapt {
             userService.getUsers(request)
         }

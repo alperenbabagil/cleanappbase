@@ -66,17 +66,17 @@ class CABDemoApiCallAdapterTest {
 
         coEvery { serviceBody.invoke() } returns response
 
-        var resultDH : com.alperenbabagil.dataholder.DataHolder<DummyResponseType>
+        var resultDH : DataHolder<DummyResponseType>
 
         runBlocking {
             resultDH = cabDemoApiCallAdapter.adapt { serviceBody.invoke() }
         }
 
         // Testing success state
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Success)
+        assertTrue(resultDH is DataHolder.Success)
 
         // Testing success data
-        assertEquals(dummyInstance,(resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
+        assertEquals(dummyInstance,(resultDH as DataHolder.Success).data)
 
         coEvery { response.body() } coAnswers {CABDemoBaseApiResponse(SERVER_STATUS_FAIL,dummyInstance,
             ServerError(serverErrorString,serverErrorCode)
@@ -87,13 +87,13 @@ class CABDemoApiCallAdapterTest {
         }
 
         // Testing fail state
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertTrue(resultDH is DataHolder.Fail)
 
         // Testing fail error string
-        assertEquals(serverErrorString,((resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error as ServerError).errorMessage)
+        assertEquals(serverErrorString,((resultDH as DataHolder.Fail).error as ServerError).errorMessage)
 
         // Testing fail error code
-        assertEquals(serverErrorCode,((resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error as ServerError).errorCode)
+        assertEquals(serverErrorCode,((resultDH as DataHolder.Fail).error as ServerError).errorCode)
 
         coEvery { response.body() } coAnswers {CABDemoBaseApiResponse("INVALID STATUS",dummyInstance,null)}
 
@@ -101,50 +101,50 @@ class CABDemoApiCallAdapterTest {
             resultDH = cabDemoApiCallAdapter.adapt { serviceBody.invoke() }
         }
         // Testing invalid status string fail
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertTrue(resultDH is DataHolder.Fail)
 
         runBlocking {
             resultDH = cabDemoApiCallAdapter.adapt { getRetrofit(ResponseStringType.SUCCESS,200).create(DummyService::class.java).getDummy() }
         }
         // Testing json string success
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Success)
+        assertTrue(resultDH is DataHolder.Success)
 
         // Testing success data
-        assertEquals(dummyInstance,(resultDH as com.alperenbabagil.dataholder.DataHolder.Success).data)
+        assertEquals(dummyInstance,(resultDH as DataHolder.Success).data)
 
         runBlocking {
             resultDH = cabDemoApiCallAdapter.adapt { getRetrofit(ResponseStringType.SUCCESS,500).create(DummyService::class.java).getDummy() }
         }
 
         // Testing non-success http response code
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertTrue(resultDH is DataHolder.Fail)
 
         runBlocking {
             resultDH = cabDemoApiCallAdapter.adapt { getRetrofit(ResponseStringType.SUCCESS,404).create(DummyService::class.java).getDummy() }
         }
 
         // Testing non-success http response code
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertTrue(resultDH is DataHolder.Fail)
 
         runBlocking {
             resultDH = cabDemoApiCallAdapter.adapt { getRetrofit(ResponseStringType.FAIL,200).create(DummyService::class.java).getDummy() }
         }
 
         // Testing fail state json
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertTrue(resultDH is DataHolder.Fail)
 
         // Testing fail state json server error content
-        assertEquals(serverErrorString,(resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).errStr)
+        assertEquals(serverErrorString,(resultDH as DataHolder.Fail).errStr)
 
         // Testing fail state json server error code
-        assertEquals(serverErrorCode,((resultDH as com.alperenbabagil.dataholder.DataHolder.Fail).error as ServerError).errorCode)
+        assertEquals(serverErrorCode,((resultDH as DataHolder.Fail).error as ServerError).errorCode)
 
         runBlocking {
             resultDH = cabDemoApiCallAdapter.adapt { getRetrofit(ResponseStringType.INVALID_JSON,200).create(DummyService::class.java).getDummy() }
         }
 
         // Testing invalid json
-        assertTrue(resultDH is com.alperenbabagil.dataholder.DataHolder.Fail)
+        assertTrue(resultDH is DataHolder.Fail)
 
     }
 

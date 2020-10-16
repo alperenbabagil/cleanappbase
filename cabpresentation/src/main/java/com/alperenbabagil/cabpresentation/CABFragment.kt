@@ -11,7 +11,7 @@ interface CABFragment : DialogHost {
 }
 
 fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=true,
-                                                dataHolder: com.alperenbabagil.dataholder.DataHolder<T>,
+                                                dataHolder: DataHolder<T>,
                                                 errorBody : (errorStr:String,errorResId:Int) -> Unit,
                                                 errorButtonClick : () -> Unit,
                                                 bypassErrorHandling:Boolean,
@@ -20,7 +20,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
 
 ){
     when(dataHolder){
-        is com.alperenbabagil.dataholder.DataHolder.Success ->{
+        is DataHolder.Success ->{
             if(showDialogsInFragment){
                 if(!bypassDisableCurrentPopupOnSuccess) dismissCurrentDialog()
             }
@@ -31,7 +31,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
             }
             successBody.invoke(dataHolder.data)
         }
-        is com.alperenbabagil.dataholder.DataHolder.Fail ->{
+        is DataHolder.Fail ->{
             if(bypassErrorHandling){
                 errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
             }
@@ -57,7 +57,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                 }
             }
         }
-        is com.alperenbabagil.dataholder.DataHolder.Loading ->{
+        is DataHolder.Loading ->{
             if(showDialogsInFragment){
                 showLoadingDialog(dataHolder = dataHolder)
             }
@@ -70,7 +70,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
 }
 
 fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
-                                           liveData: LiveData<com.alperenbabagil.dataholder.DataHolder<T>>,
+                                           liveData: LiveData<DataHolder<T>>,
                                            errorBody : (errorStr:String,errorResId:Int) -> Unit = {_,_ -> },
                                            errorButtonClick : () -> Unit = {},
                                            bypassErrorHandling:Boolean=false,

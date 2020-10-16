@@ -10,6 +10,7 @@ import com.alperenbabagil.cleanappbase.main.data.model.UserListItemNetworkDTO
 import com.alperenbabagil.cleanappbase.main.data.model.mapToUserListItem
 import com.alperenbabagil.cleanappbase.main.domain.UserRepository
 import com.alperenbabagil.cleanappbase.main.domain.model.UserListItem
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.dataholder.handleSuccess
 
 
@@ -19,7 +20,7 @@ class UserRepositoryImpl(private val getUsersDataSource:
 ): UserRepository {
 
     override suspend fun getUsers(requestResultType: RequestResultType)
-            : com.alperenbabagil.dataholder.DataHolder<List<UserListItem>> {
+            : DataHolder<List<UserListItem>> {
         val requestTemplate=when(requestResultType){
             RequestResultType.SUCCESS->{
                 ResponseTemplate(data=UserListDataTemplate())

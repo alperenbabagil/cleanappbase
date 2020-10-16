@@ -8,12 +8,13 @@ import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
 import com.alperenbabagil.cleanappbase.core.presentation.CABDemoBaseViewModel
 import com.alperenbabagil.cleanappbase.main.domain.GetUsersInteractor
 import com.alperenbabagil.cleanappbase.main.domain.model.UserListItem
+import com.alperenbabagil.dataholder.DataHolder
 
 class MainViewModel(private val getUsersInteractor:
                     Interactor.SingleInteractor<GetUsersInteractor.Params,List<UserListItem>>)
     : CABDemoBaseViewModel() {
 
-    private val _usersLiveData= MutableLiveData<com.alperenbabagil.dataholder.DataHolder<List<UserListItem>>>()
+    private val _usersLiveData= MutableLiveData<DataHolder<List<UserListItem>>>()
     val usersLiveData=_usersLiveData.asLiveData()
 
     fun getUsers(requestResultType: RequestResultType){

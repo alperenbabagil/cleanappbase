@@ -5,27 +5,30 @@ import com.alperenbabagil.dataholder.CoreDomainConstants.Companion.DEFAULT_LOADI
 import java.util.*
 
 
-sealed class DataHolder<out T: Any> {
+sealed class DataHolder<out T : Any> {
 
-    data class Success<out T : Any>(val data:T) : DataHolder<T>()
+    data class Success<out T : Any>(val data: T) : DataHolder<T>()
 
-    data class Fail(val errorResourceId : Int?= null,
-                    val errStr: String=DEFAULT_ERROR_STR,
-                    val error: BaseError?=null
-                    ) : DataHolder<Nothing>()
+    data class Fail(
+        val errorResourceId: Int? = null,
+        val errStr: String = DEFAULT_ERROR_STR,
+        val error: BaseError? = null
+    ) : DataHolder<Nothing>()
 
-    data class Loading(val loadingResourceId : Int?=null,
-                       val loadingStr: String=DEFAULT_LOADING_STR,
-                       var cancellable:Boolean=false,
-                       var progress: Int=0,
-                       var tag:String=UUID.randomUUID().toString()) : DataHolder<Nothing>()
+    data class Loading(
+        val loadingResourceId: Int? = null,
+        val loadingStr: String = DEFAULT_LOADING_STR,
+        var cancellable: Boolean = false,
+        var progress: Int = 0,
+        var tag: String = UUID.randomUUID().toString()
+    ) : DataHolder<Nothing>()
 }
 
-fun <T : Any,R : Any> DataHolder<T>.handleSuccess(successBlock :
-                                                 (dataHolder: DataHolder.Success<T>) -> R
-) : DataHolder<R> =
-    when(this){
-        is DataHolder.Success<T> -> DataHolder.Success(successBlock.invoke(this))
-        is DataHolder.Fail -> this
-        is DataHolder.Loading -> this
-    }
+fun <T : Any, R : Any> DataHolder<T>.handleSuccess(
+    successBlock:
+        (dataHolder: DataHolder.Success<T>) -> R
+): DataHolder<R> = when (this) {
+    is DataHolder.Success<T> -> DataHolder.Success(successBlock.invoke(this))
+    is DataHolder.Fail -> this
+    is DataHolder.Loading -> this
+}

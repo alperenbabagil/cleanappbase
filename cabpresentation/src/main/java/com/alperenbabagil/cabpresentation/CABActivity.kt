@@ -9,7 +9,7 @@ interface CABActivity : DialogHost{
 
 }
 
-fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: com.alperenbabagil.dataholder.DataHolder<T>,
+fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                                                 errorBody : (errorStr:String,errorResId:Int) -> Unit,
                                                 errorButtonClick : () -> Unit,
                                                 bypassErrorHandling:Boolean,
@@ -17,12 +17,12 @@ fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: com.alperenbabagil.d
                                                 successBody : (data:T) -> Unit
 
 ){
-    if(dataHolder is com.alperenbabagil.dataholder.DataHolder.Success){
+    if(dataHolder is DataHolder.Success){
         if(!bypassDisableCurrentPopupOnSuccess) dismissCurrentDialog()
         successBody.invoke(dataHolder.data)
     }
 
-    if(dataHolder is com.alperenbabagil.dataholder.DataHolder.Fail){
+    if(dataHolder is DataHolder.Fail){
         dismissCurrentDialog()
         if(bypassErrorHandling){
             errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId ?: -1)
@@ -37,13 +37,13 @@ fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: com.alperenbabagil.d
                 )
         }
     }
-    if(dataHolder is com.alperenbabagil.dataholder.DataHolder.Loading){
+    if(dataHolder is DataHolder.Loading){
         dismissCurrentDialog()
         showLoadingDialog(dataHolder = dataHolder)
     }
 }
 
-fun <T : Any>CABActivity.observeDataHolder(liveData: LiveData<com.alperenbabagil.dataholder.DataHolder<T>>,
+fun <T : Any>CABActivity.observeDataHolder(liveData: LiveData<DataHolder<T>>,
                                            errorBody : (errorStr:String,errorResId:Int) -> Unit = {_,_ -> },
                                            errorButtonClick : () -> Unit = {},
                                            bypassErrorHandling:Boolean=false,

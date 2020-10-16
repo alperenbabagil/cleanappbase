@@ -6,4 +6,4 @@ import com.google.gson.annotations.SerializedName
 data class ServerError(
     @SerializedName("errorMessage") val errorMessage: String,
     @SerializedName("errorCode") val errorCode: Int
-) : com.alperenbabagil.dataholder.BaseError()
+) : BaseError()

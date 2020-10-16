@@ -10,7 +10,7 @@ interface DialogHost {
 
     fun showLoadingDialog(animRes: Int = R.raw.sap_loading_anim,
                           isCancellable: Boolean = false,
-                          dataHolder: com.alperenbabagil.dataholder.DataHolder.Loading?=null,
+                          dataHolder: DataHolder.Loading?=null,
                           sapCancelEvent: () -> Unit = {})
 
     fun dismissCurrentDialog()

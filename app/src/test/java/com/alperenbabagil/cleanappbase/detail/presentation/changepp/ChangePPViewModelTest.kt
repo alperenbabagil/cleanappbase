@@ -47,11 +47,11 @@ class ChangePPViewModelTest {
 
         var requestParam = GetProfileDetailInteractor.Params(userId,RequestResultType.SUCCESS,2000L)
 
-        coEvery { getProfileDetailInteractor.execute(requestParam) } coAnswers { com.alperenbabagil.dataholder.DataHolder.Success(expectedDetail)}
+        coEvery { getProfileDetailInteractor.execute(requestParam) } coAnswers { DataHolder.Success(expectedDetail)}
 
         val changePPViewModel = spyk(ChangePPViewModel(getProfileDetailInteractor))
 
-        val valueObserver : Observer<com.alperenbabagil.dataholder.DataHolder<ProfileDetail>> = mockk(relaxUnitFun = true)
+        val valueObserver : Observer<DataHolder<ProfileDetail>> = mockk(relaxUnitFun = true)
 
         changePPViewModel.profileDetailLiveData.observeForever(valueObserver)
 
@@ -59,13 +59,13 @@ class ChangePPViewModelTest {
             changePPViewModel.getProfileDetail(userId,RequestResultType.SUCCESS,2000L)
         }
 
-        coVerify {  valueObserver.onChanged(com.alperenbabagil.dataholder.DataHolder.Success(expectedDetail))}
+        coVerify {  valueObserver.onChanged(DataHolder.Success(expectedDetail))}
 
-        assertEquals(expectedDetail,(changePPViewModel.profileDetailLiveData.value as com.alperenbabagil.dataholder.DataHolder.Success).data)
+        assertEquals(expectedDetail,(changePPViewModel.profileDetailLiveData.value as DataHolder.Success).data)
 
         requestParam = GetProfileDetailInteractor.Params(userId,RequestResultType.FAIL,2000L)
 
-        val expectedFail = com.alperenbabagil.dataholder.DataHolder.Fail(error = ServerError("serverErrorStr",7))
+        val expectedFail = DataHolder.Fail(error = ServerError("serverErrorStr",7))
 
         coEvery { getProfileDetailInteractor.execute(requestParam) } coAnswers {expectedFail}
 
@@ -75,7 +75,7 @@ class ChangePPViewModelTest {
 
         coVerify {  valueObserver.onChanged(expectedFail)}
 
-        assertEquals(expectedFail.error,(changePPViewModel.profileDetailLiveData.value as com.alperenbabagil.dataholder.DataHolder.Fail).error)
+        assertEquals(expectedFail.error,(changePPViewModel.profileDetailLiveData.value as DataHolder.Fail).error)
 
 
     }

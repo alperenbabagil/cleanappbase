@@ -5,5 +5,5 @@ import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
 import com.alperenbabagil.cleanappbase.main.domain.model.UserListItem
 
 interface UserRepository {
-    suspend fun getUsers(requestResultType: RequestResultType) : com.alperenbabagil.dataholder.DataHolder<List<UserListItem>>
+    suspend fun getUsers(requestResultType: RequestResultType) : DataHolder<List<UserListItem>>
 }

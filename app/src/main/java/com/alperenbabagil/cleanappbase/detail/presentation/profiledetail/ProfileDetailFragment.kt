@@ -50,20 +50,6 @@ class ProfileDetailFragment : CABDemoBaseFragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        observeDataHolder(liveData = cabViewModel.profileDetailLiveData){
-            fillDetail(it)
-        }
-
-        getArgument<String>(getString(R.string.userNameKey),onFound = {
-            userName=it
-            cabViewModel.getProfileDetail(it, RequestResultType.SUCCESS,selectedDelay * 1000L)
-        }){
-            showErrorDialog(errorRes = R.string.user_name_error)
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         userDetailRecyclerView.apply {
@@ -95,6 +81,17 @@ class ProfileDetailFragment : CABDemoBaseFragment() {
 
         getFail.setOnClickListener {
             cabViewModel.getProfileDetail(userName, RequestResultType.FAIL,selectedDelay * 1000L)
+        }
+
+        observeDataHolder<ProfileDetail>(liveData = cabViewModel.profileDetailLiveData){
+            fillDetail(it)
+        }
+
+        getArgument<String>(getString(R.string.userNameKey),onFound = {
+            userName=it
+            cabViewModel.getProfileDetail(it, RequestResultType.SUCCESS,selectedDelay * 1000L)
+        }){
+            showErrorDialog(errorRes = R.string.user_name_error)
         }
     }
 
