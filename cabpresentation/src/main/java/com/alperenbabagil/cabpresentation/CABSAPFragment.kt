@@ -77,7 +77,7 @@ fun <T : Any>CABSAPFragment.observeDataHolder(showDialogsInFragment:Boolean=true
                                               bypassErrorHandling:Boolean=false,
                                               bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                               successBody : (data:T) -> Unit){
-    liveData.observe(this as LifecycleOwner, Observer { dataHolder ->
+    liveData.observe(this as LifecycleOwner, { dataHolder ->
         handleDataHolderResult(showDialogsInFragment,
             dataHolder,
             errorBody,
