@@ -16,5 +16,4 @@ abstract class CABDemoBaseActivity : AppCompatActivity(), CABSAPActivity,Navigat
     override fun loadingDialogDismissed() {
         //to override
     }
-
 }

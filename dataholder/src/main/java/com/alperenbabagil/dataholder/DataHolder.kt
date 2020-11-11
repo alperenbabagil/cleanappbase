@@ -12,7 +12,9 @@ sealed class DataHolder<out T : Any> {
     data class Fail(
         val errorResourceId: Int? = null,
         val errStr: String = DEFAULT_ERROR_STR,
-        val error: BaseError? = null
+        val error: BaseError? = null,
+        val failType: FailType = FailType.ERROR,
+        val cancellable: Boolean = false
     ) : DataHolder<Nothing>()
 
     data class Loading(

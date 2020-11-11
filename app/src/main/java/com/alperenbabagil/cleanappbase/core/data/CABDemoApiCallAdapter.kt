@@ -7,6 +7,7 @@ import com.alperenbabagil.cleanappbase.core.data.CoreDataConstants.Companion.SER
 import com.alperenbabagil.cleanappbase.core.data.model.CABDemoBaseApiResponse
 import com.alperenbabagil.dataholder.BaseError
 import com.alperenbabagil.dataholder.DataHolder
+import com.alperenbabagil.dataholder.FailType
 import retrofit2.Response
 
 class CABDemoApiCallAdapter : ApiCallAdapter {
@@ -15,30 +16,29 @@ class CABDemoApiCallAdapter : ApiCallAdapter {
             DataHolder<T> {
         return try {
             serviceBody.invoke()?.let {
-                if(it.isSuccessful){
+                if (it.isSuccessful) {
                     it.body()?.let {
                         (it as? CABDemoBaseApiResponse<T>)?.let {
-                            when(it.status){
+                            when (it.status) {
                                 SERVER_STATUS_SUCCESS -> DataHolder.Success(it.data)
-                                SERVER_STATUS_FAIL ->{
+                                SERVER_STATUS_FAIL -> {
                                     it.serverError?.let {
-                                        DataHolder.Fail(errStr = it.errorMessage,error = it)
-                                    }?: DataHolder.Fail()
+                                        DataHolder.Fail(errStr = it.errorMessage, error = it,failType = FailType.INFO,cancellable = true)
+                                    } ?: DataHolder.Fail()
                                 }
                                 else -> DataHolder.Fail()
                             }
                         }
                     } ?: DataHolder.Fail()
-                }
-                else{
+                } else {
                     DataHolder.Fail()
                 }
-            }?: DataHolder.Fail()
-        }
-        catch (e:Exception){
-            DataHolder.Fail(error = BaseError(
-                e
-            )
+            } ?: DataHolder.Fail()
+        } catch (e: Exception) {
+            DataHolder.Fail(
+                error = BaseError(
+                    e
+                )
             )
         }
     }

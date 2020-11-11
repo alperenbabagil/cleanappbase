@@ -3,7 +3,10 @@ package com.alperenbabagil.cabpresentation
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.alperenbabagil.dataholder.DataHolder
+import com.alperenbabagil.dataholder.FailType
 import com.alperenbabagil.simpleanimationpopuplibrary.showErrorDialog
+import com.alperenbabagil.simpleanimationpopuplibrary.showInfoDialog
+import com.alperenbabagil.simpleanimationpopuplibrary.showWarningDialog
 
 interface CABSAPActivity : DialogHolderActivity{
 }
@@ -27,11 +30,34 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
             errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
         }
         else{
-            showErrorDialog(errorRes = dataHolder.errorResourceId,
-                errorStr = dataHolder.errStr,
-                isCancellable = false,
-                positiveButtonStrRes = R.string.ok,
-                positiveButtonClick = errorButtonClick)
+            when(dataHolder.failType){
+                FailType.ERROR->{
+                    showErrorDialog(
+                        titleRes = R.string.error,
+                        errorRes = dataHolder.errorResourceId?:-1,
+                        errorStr = dataHolder.errStr,
+                        positiveButtonStrRes = R.string.ok,
+                        positiveButtonClick = errorButtonClick,
+                        isCancellable = dataHolder.cancellable
+                    )
+                }
+                FailType.INFO ->{
+                    showInfoDialog(titleRes = R.string.info,
+                        infoRes = dataHolder.errorResourceId?:-1,
+                        infoStr = dataHolder.errStr,
+                        positiveButtonStrRes = R.string.ok,
+                        positiveButtonClick = errorButtonClick,
+                        isCancellable = dataHolder.cancellable)
+                }
+                FailType.WARNING->{
+                    showWarningDialog(titleRes = R.string.warning,
+                        warningRes = dataHolder.errorResourceId?:-1,
+                        warningStr = dataHolder.errStr,
+                        positiveButtonStrRes = R.string.ok,
+                        positiveButtonClick = errorButtonClick,
+                        isCancellable = dataHolder.cancellable)
+                }
+            }
         }
     }
     if(dataHolder is DataHolder.Loading){

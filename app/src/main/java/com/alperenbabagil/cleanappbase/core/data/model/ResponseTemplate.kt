@@ -1,7 +1,5 @@
 package com.alperenbabagil.cleanappbase.core.data.model
 
-
-import com.alperenbabagil.dataholder.CoreDomainConstants
 import com.alperenbabagil.cleanappbase.core.data.CoreDataConstants
 import com.google.gson.annotations.SerializedName
 

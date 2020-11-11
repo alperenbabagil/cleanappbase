@@ -5,7 +5,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.alperenbabagil.dataholder.DataHolder
+import com.alperenbabagil.dataholder.FailType
 import com.alperenbabagil.simpleanimationpopuplibrary.showErrorDialog
+import com.alperenbabagil.simpleanimationpopuplibrary.showInfoDialog
+import com.alperenbabagil.simpleanimationpopuplibrary.showWarningDialog
 
 interface CABSAPFragment : DialogHolderFragment {
 
@@ -38,23 +41,64 @@ fun <T : Any>CABSAPFragment.handleDataHolderResult(showDialogsInFragment:Boolean
             }
             else{
                 if(showDialogsInFragment){
-                    showErrorDialog(
-                        titleRes = R.string.error,
-                        errorRes = dataHolder.errorResourceId?:-1,
-                        errorStr = dataHolder.errStr,
-                        positiveButtonStrRes = R.string.ok,
-                        positiveButtonClick = errorButtonClick
-                    )
+                    when(dataHolder.failType){
+                        FailType.ERROR->{
+                            showErrorDialog(
+                                titleRes = R.string.error,
+                                errorRes = dataHolder.errorResourceId?:-1,
+                                errorStr = dataHolder.errStr,
+                                positiveButtonStrRes = R.string.ok,
+                                positiveButtonClick = errorButtonClick,
+                                isCancellable = dataHolder.cancellable
+                            )
+                        }
+                        FailType.INFO ->{
+                            showInfoDialog(titleRes = R.string.info,
+                                infoRes = dataHolder.errorResourceId?:-1,
+                                infoStr = dataHolder.errStr,
+                                positiveButtonStrRes = R.string.ok,
+                                positiveButtonClick = errorButtonClick,
+                                isCancellable = dataHolder.cancellable)
+                        }
+                        FailType.WARNING->{
+                            showWarningDialog(titleRes = R.string.warning,
+                                warningRes = dataHolder.errorResourceId?:-1,
+                                warningStr = dataHolder.errStr,
+                                positiveButtonStrRes = R.string.ok,
+                                positiveButtonClick = errorButtonClick,
+                                isCancellable = dataHolder.cancellable)
+                        }
+                    }
                 }
                 else{
-                    ((this as? Fragment)?.requireActivity() as? CABActivity)?.
-                    showErrorDialog(
-                        titleRes = R.string.error,
-                        errorRes = dataHolder.errorResourceId?:-1,
-                        errorStr = dataHolder.errStr,
-                        positiveButtonStrRes = R.string.ok,
-                        positiveButtonClick = errorButtonClick
-                    )
+                    when(dataHolder.failType){
+                        FailType.ERROR->{
+                            ((this as? Fragment)?.requireActivity() as? CABActivity)?.showErrorDialog(
+                                titleRes = R.string.error,
+                                errorRes = dataHolder.errorResourceId?:-1,
+                                errorStr = dataHolder.errStr,
+                                positiveButtonStrRes = R.string.ok,
+                                positiveButtonClick = errorButtonClick,
+                                isCancellable = dataHolder.cancellable
+                            )
+                        }
+                        FailType.INFO ->{
+                            ((this as? Fragment)?.requireActivity() as? CABActivity)?.showInfoDialog(titleRes = R.string.info,
+                                infoRes = dataHolder.errorResourceId?:-1,
+                                infoStr = dataHolder.errStr,
+                                positiveButtonStrRes = R.string.ok,
+                                positiveButtonClick = errorButtonClick,
+                                isCancellable = dataHolder.cancellable)
+                        }
+                        FailType.WARNING->{
+                            ((this as? Fragment)?.requireActivity() as? CABActivity)?.showWarningDialog(titleRes = R.string.warning,
+                                warningRes = dataHolder.errorResourceId?:-1,
+                                warningStr = dataHolder.errStr,
+                                positiveButtonStrRes = R.string.ok,
+                                positiveButtonClick = errorButtonClick,
+                                isCancellable = dataHolder.cancellable)
+                        }
+                    }
                 }
             }
         }

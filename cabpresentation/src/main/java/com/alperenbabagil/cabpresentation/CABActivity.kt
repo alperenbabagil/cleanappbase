@@ -4,6 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.alperenbabagil.dataholder.DataHolder
+import com.alperenbabagil.dataholder.FailType
 
 interface CABActivity : DialogHost{
 
@@ -28,13 +29,34 @@ fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
             errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId ?: -1)
         }
         else{
-            showErrorDialog(
-                titleRes = R.string.error,
-                errorRes = dataHolder.errorResourceId?:-1,
-                errorStr = dataHolder.errStr,
-                positiveButtonStrRes = R.string.ok,
-                positiveButtonClick = errorButtonClick
-                )
+            when(dataHolder.failType){
+                FailType.ERROR->{
+                    showErrorDialog(
+                        titleRes = R.string.error,
+                        errorRes = dataHolder.errorResourceId?:-1,
+                        errorStr = dataHolder.errStr,
+                        positiveButtonStrRes = R.string.ok,
+                        positiveButtonClick = errorButtonClick,
+                        isCancellable = dataHolder.cancellable
+                    )
+                }
+                FailType.INFO ->{
+                    showInfoDialog(titleRes = R.string.info,
+                        infoRes = dataHolder.errorResourceId?:-1,
+                        infoStr = dataHolder.errStr,
+                        positiveButtonStrRes = R.string.ok,
+                        positiveButtonClick = errorButtonClick,
+                        isCancellable = dataHolder.cancellable)
+                }
+                FailType.WARNING->{
+                    showWarningDialog(titleRes = R.string.warning,
+                        warningRes = dataHolder.errorResourceId?:-1,
+                        warningStr = dataHolder.errStr,
+                        positiveButtonStrRes = R.string.ok,
+                        positiveButtonClick = errorButtonClick,
+                        isCancellable = dataHolder.cancellable)
+                }
+            }
         }
     }
     if(dataHolder is DataHolder.Loading){

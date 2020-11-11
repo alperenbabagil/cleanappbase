@@ -22,5 +22,4 @@ class MainViewModel(private val getUsersInteractor:
             getUsersInteractor,
             GetUsersInteractor.Params(requestResultType))
     }
-
 }
