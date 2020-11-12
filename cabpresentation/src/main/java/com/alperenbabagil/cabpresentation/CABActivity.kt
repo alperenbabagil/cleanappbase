@@ -17,15 +17,20 @@ fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                                                 errorButtonClick : () -> Unit,
                                                 bypassErrorHandling:Boolean,
                                                 bypassDisableCurrentPopupOnSuccess:Boolean,
+                                                observeSuccessValueOnce:Boolean=false,
+                                                observeFailValueOnce:Boolean=false,
                                                 successBody : (data:T) -> Unit
 
 ){
     if(dataHolder is DataHolder.Success){
+        if(observeSuccessValueOnce && dataHolder.isObserved) return
         if(!bypassDisableCurrentPopupOnSuccess) dismissCurrentDialog()
         successBody.invoke(dataHolder.data)
+        dataHolder.setObserved()
     }
 
     if(dataHolder is DataHolder.Fail){
+        if(observeFailValueOnce && dataHolder.isObserved) return
         dismissCurrentDialog()
         if(bypassErrorHandling){
             errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId ?: -1)
@@ -60,6 +65,7 @@ fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                 }
             }
         }
+        dataHolder.setObserved()
     }
     if(dataHolder is DataHolder.Loading){
         dismissCurrentDialog()
@@ -72,6 +78,8 @@ fun <T : Any>CABActivity.observeDataHolder(liveData: LiveData<DataHolder<T>>,
                                            errorButtonClick : () -> Unit = {},
                                            bypassErrorHandling:Boolean=false,
                                            bypassDisableCurrentPopupOnSuccess:Boolean=false,
+                                           observeSuccessValueOnce:Boolean=false,
+                                           observeFailValueOnce:Boolean=false,
                                            successBody : (data:T) -> Unit){
     liveData.observe(this as LifecycleOwner, Observer {dataHolder ->
         handleDataHolderResult(dataHolder,
@@ -79,6 +87,8 @@ fun <T : Any>CABActivity.observeDataHolder(liveData: LiveData<DataHolder<T>>,
             errorButtonClick,
             bypassErrorHandling,
             bypassDisableCurrentPopupOnSuccess,
+            observeSuccessValueOnce,
+            observeFailValueOnce,
             successBody)
     })
 }

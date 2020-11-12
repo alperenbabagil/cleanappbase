@@ -7,7 +7,14 @@ import java.util.*
 
 sealed class DataHolder<out T : Any> {
 
-    data class Success<out T : Any>(val data: T) : DataHolder<T>()
+    data class Success<out T : Any>(val data: T) : DataHolder<T>(){
+        var isObserved = false
+            private set
+
+        fun setObserved(){
+            isObserved=true
+        }
+    }
 
     data class Fail(
         val errorResourceId: Int? = null,
@@ -15,7 +22,14 @@ sealed class DataHolder<out T : Any> {
         val error: BaseError? = null,
         val failType: FailType = FailType.ERROR,
         val cancellable: Boolean = false
-    ) : DataHolder<Nothing>()
+    ) : DataHolder<Nothing>(){
+        var isObserved = false
+            private set
+
+        fun setObserved(){
+            isObserved=true
+        }
+    }
 
     data class Loading(
         val loadingResourceId: Int? = null,

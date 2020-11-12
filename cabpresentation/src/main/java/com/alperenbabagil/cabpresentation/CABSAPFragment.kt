@@ -22,11 +22,14 @@ fun <T : Any>CABSAPFragment.handleDataHolderResult(showDialogsInFragment:Boolean
                                                    errorButtonClick : () -> Unit,
                                                    bypassErrorHandling:Boolean,
                                                    bypassDisableCurrentPopupOnSuccess:Boolean,
+                                                   observeSuccessValueOnce:Boolean=false,
+                                                   observeFailValueOnce:Boolean=false,
                                                    successBody : (data:T) -> Unit
 
 ){
     when(dataHolder){
         is DataHolder.Success ->{
+            if(observeSuccessValueOnce && dataHolder.isObserved) return
             if(showDialogsInFragment){
                 if(!bypassDisableCurrentPopupOnSuccess) currentDialogView?.hide()
             }
@@ -36,8 +39,10 @@ fun <T : Any>CABSAPFragment.handleDataHolderResult(showDialogsInFragment:Boolean
                 }
             }
             successBody.invoke(dataHolder.data)
+            dataHolder.setObserved()
         }
         is DataHolder.Fail ->{
+            if(observeFailValueOnce && dataHolder.isObserved) return
             if(bypassErrorHandling){
                 errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
             }
@@ -139,6 +144,7 @@ fun <T : Any>CABSAPFragment.handleDataHolderResult(showDialogsInFragment:Boolean
                     }
                 }
             }
+            dataHolder.setObserved()
         }
         is DataHolder.Loading ->{
             if(showDialogsInFragment){
@@ -158,6 +164,8 @@ fun <T : Any>CABSAPFragment.observeDataHolder(showDialogsInFragment:Boolean=true
                                               errorButtonClick : () -> Unit = {},
                                               bypassErrorHandling:Boolean=false,
                                               bypassDisableCurrentPopupOnSuccess:Boolean=false,
+                                              observeSuccessValueOnce:Boolean=false,
+                                              observeFailValueOnce:Boolean=false,
                                               successBody : (data:T) -> Unit){
     liveData.observe(this as LifecycleOwner, { dataHolder ->
         handleDataHolderResult(showDialogsInFragment,
@@ -166,6 +174,8 @@ fun <T : Any>CABSAPFragment.observeDataHolder(showDialogsInFragment:Boolean=true
             errorButtonClick,
             bypassErrorHandling,
             bypassDisableCurrentPopupOnSuccess,
+            observeSuccessValueOnce,
+            observeFailValueOnce,
             successBody)
     })
 }

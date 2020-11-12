@@ -30,11 +30,6 @@ class MainActivity : CABDemoBaseActivity() {
 
     override val cabViewModel: MainViewModel by viewModel(named<MainViewModel>())
 
-    override fun <T : Any> getInterceptorLambda(): ((dataHolder: DataHolder<T>) -> Boolean)? ={
-        Log.d("getInterceptorLambda","intercepted")
-        true
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,7 +45,6 @@ class MainActivity : CABDemoBaseActivity() {
         }
 
         observeDataHolder(cabViewModel.usersLiveData,errorButtonClick = {
-            Log.d("getInterceptorLambda","not intercepted")
             askForSuccessOrFail()
         }){
             Adapter.builder(this)

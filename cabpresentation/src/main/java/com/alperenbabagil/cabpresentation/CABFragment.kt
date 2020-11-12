@@ -19,11 +19,14 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                                 errorButtonClick : () -> Unit,
                                                 bypassErrorHandling:Boolean,
                                                 bypassDisableCurrentPopupOnSuccess:Boolean,
+                                                observeSuccessValueOnce:Boolean=false,
+                                                observeFailValueOnce:Boolean=false,
                                                 successBody : (data:T) -> Unit
 
 ){
     when(dataHolder){
         is DataHolder.Success ->{
+            if(observeSuccessValueOnce && dataHolder.isObserved) return
             if(showDialogsInFragment){
                 if(!bypassDisableCurrentPopupOnSuccess) dismissCurrentDialog()
             }
@@ -33,8 +36,10 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                 }
             }
             successBody.invoke(dataHolder.data)
+            dataHolder.setObserved()
         }
         is DataHolder.Fail ->{
+            if(observeFailValueOnce && dataHolder.isObserved) return
             if(bypassErrorHandling){
                 errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
             }
@@ -118,6 +123,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                     }
                 }
             }
+            dataHolder.setObserved()
         }
         is DataHolder.Loading ->{
             if(showDialogsInFragment){
@@ -137,14 +143,18 @@ fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
                                            errorButtonClick : () -> Unit = {},
                                            bypassErrorHandling:Boolean=false,
                                            bypassDisableCurrentPopupOnSuccess:Boolean=false,
+                                           observeSuccessValueOnce:Boolean=false,
+                                           observeFailValueOnce:Boolean=false,
                                            successBody : (data:T) -> Unit){
-    liveData.observe(this as LifecycleOwner, Observer { dataHolder ->
+    liveData.observe(this as LifecycleOwner, { dataHolder ->
         handleDataHolderResult(showDialogsInFragment,
             dataHolder,
             errorBody,
             errorButtonClick,
             bypassErrorHandling,
             bypassDisableCurrentPopupOnSuccess,
+            observeSuccessValueOnce,
+            observeFailValueOnce,
             successBody)
     })
 }
