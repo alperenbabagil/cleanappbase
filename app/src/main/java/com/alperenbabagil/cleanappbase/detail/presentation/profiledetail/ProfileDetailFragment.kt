@@ -83,7 +83,7 @@ class ProfileDetailFragment : CABDemoBaseFragment() {
             cabViewModel.getProfileDetail(userName, RequestResultType.FAIL,selectedDelay * 1000L)
         }
 
-        observeDataHolder<ProfileDetail>(liveData = cabViewModel.profileDetailLiveData){
+        observeDataHolder(liveData = cabViewModel.profileDetailLiveData){
             fillDetail(it)
         }
 

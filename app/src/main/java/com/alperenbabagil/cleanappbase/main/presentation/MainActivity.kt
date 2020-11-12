@@ -2,6 +2,7 @@ package com.alperenbabagil.cleanappbase.main.presentation
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -13,6 +14,7 @@ import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
 import com.alperenbabagil.cleanappbase.core.presentation.CABDemoBaseActivity
 import com.alperenbabagil.cleanappbase.databinding.UserListItemRowBinding
 import com.alperenbabagil.cleanappbase.main.domain.model.UserListItem
+import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.simpleanimationpopuplibrary.showWarningDialog
 import com.otaliastudios.elements.Adapter
 import com.otaliastudios.elements.Element
@@ -27,6 +29,11 @@ import org.koin.core.qualifier.named
 class MainActivity : CABDemoBaseActivity() {
 
     override val cabViewModel: MainViewModel by viewModel(named<MainViewModel>())
+
+    override fun <T : Any> getInterceptorLambda(): ((dataHolder: DataHolder<T>) -> Boolean)? ={
+        Log.d("getInterceptorLambda","intercepted")
+        true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +50,7 @@ class MainActivity : CABDemoBaseActivity() {
         }
 
         observeDataHolder(cabViewModel.usersLiveData,errorButtonClick = {
+            Log.d("getInterceptorLambda","not intercepted")
             askForSuccessOrFail()
         }){
             Adapter.builder(this)

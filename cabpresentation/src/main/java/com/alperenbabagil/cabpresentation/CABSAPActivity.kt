@@ -9,6 +9,9 @@ import com.alperenbabagil.simpleanimationpopuplibrary.showInfoDialog
 import com.alperenbabagil.simpleanimationpopuplibrary.showWarningDialog
 
 interface CABSAPActivity : DialogHolderActivity{
+    override fun <T : Any> getInterceptorLambda(): ((dataHolder: DataHolder<T>) -> Boolean)? {
+        return null
+    }
 }
 
 fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
@@ -31,13 +34,19 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
         }
         else{
             when(dataHolder.failType){
-                FailType.ERROR->{
+                FailType.ERROR -> {
                     showErrorDialog(
                         titleRes = R.string.error,
-                        errorRes = dataHolder.errorResourceId?:-1,
+                        errorRes = dataHolder.errorResourceId ?: -1,
                         errorStr = dataHolder.errStr,
                         positiveButtonStrRes = R.string.ok,
-                        positiveButtonClick = errorButtonClick,
+                        positiveButtonClick = {
+                            getInterceptorLambda<T>()?.let {
+                                if(!it.invoke(dataHolder)) errorButtonClick.invoke()
+                            } ?: run{
+                                errorButtonClick.invoke()
+                            }
+                        },
                         isCancellable = dataHolder.cancellable
                     )
                 }
@@ -46,7 +55,13 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                         infoRes = dataHolder.errorResourceId?:-1,
                         infoStr = dataHolder.errStr,
                         positiveButtonStrRes = R.string.ok,
-                        positiveButtonClick = errorButtonClick,
+                        positiveButtonClick = {
+                            getInterceptorLambda<T>()?.let {
+                                if(!it.invoke(dataHolder)) errorButtonClick.invoke()
+                            } ?: run{
+                                errorButtonClick.invoke()
+                            }
+                        },
                         isCancellable = dataHolder.cancellable)
                 }
                 FailType.WARNING->{
@@ -54,7 +69,13 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                         warningRes = dataHolder.errorResourceId?:-1,
                         warningStr = dataHolder.errStr,
                         positiveButtonStrRes = R.string.ok,
-                        positiveButtonClick = errorButtonClick,
+                        positiveButtonClick = {
+                            getInterceptorLambda<T>()?.let {
+                                if(!it.invoke(dataHolder)) errorButtonClick.invoke()
+                            } ?: run{
+                                errorButtonClick.invoke()
+                            }
+                        },
                         isCancellable = dataHolder.cancellable)
                 }
             }

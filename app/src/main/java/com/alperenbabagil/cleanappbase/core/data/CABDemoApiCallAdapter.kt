@@ -23,7 +23,7 @@ class CABDemoApiCallAdapter : ApiCallAdapter {
                                 SERVER_STATUS_SUCCESS -> DataHolder.Success(it.data)
                                 SERVER_STATUS_FAIL -> {
                                     it.serverError?.let {
-                                        DataHolder.Fail(errStr = it.errorMessage, error = it,failType = FailType.INFO,cancellable = true)
+                                        DataHolder.Fail(errStr = it.errorMessage, error = it)
                                     } ?: DataHolder.Fail()
                                 }
                                 else -> DataHolder.Fail()

@@ -15,6 +15,9 @@ interface DialogHolderActivity : SapActivity {
     fun loadingDialogDismissed()
 
     val cabViewModel : CABViewModel?
+
+    // return true if event is handled
+    fun <T : Any>getInterceptorLambda() : ((dataHolder : DataHolder<T>) -> Boolean)?
 }
 
 fun DialogHolderActivity.showDHLoadingDialog(forceCancellable:Boolean=false,

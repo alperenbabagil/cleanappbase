@@ -7,7 +7,9 @@ import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.dataholder.FailType
 
 interface CABActivity : DialogHost{
-
+    override fun <T : Any> getInterceptorLambda(): ((dataHolder: DataHolder<T>) -> Boolean)? {
+        return null
+    }
 }
 
 fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,

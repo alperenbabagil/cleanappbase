@@ -8,6 +8,9 @@ interface DialogHost {
 
     val dialog: Dialog?
 
+    // return true if event is handled
+    fun <T : Any>getInterceptorLambda() : ((dataHolder : DataHolder<T>) -> Boolean)?
+
     fun showLoadingDialog(animRes: Int = R.raw.sap_loading_anim,
                           isCancellable: Boolean = false,
                           dataHolder: DataHolder.Loading?=null,

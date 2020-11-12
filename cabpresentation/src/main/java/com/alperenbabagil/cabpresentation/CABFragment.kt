@@ -8,7 +8,9 @@ import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.dataholder.FailType
 
 interface CABFragment : DialogHost {
-
+    override fun <T : Any> getInterceptorLambda(): ((dataHolder: DataHolder<T>) -> Boolean)? {
+        return null
+    }
 }
 
 fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=true,
@@ -45,7 +47,13 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 errorRes = dataHolder.errorResourceId?:-1,
                                 errorStr = dataHolder.errStr,
                                 positiveButtonStrRes = R.string.ok,
-                                positiveButtonClick = errorButtonClick,
+                                positiveButtonClick = {
+                                    getInterceptorLambda<T>()?.let {
+                                        if(!it.invoke(dataHolder)) errorButtonClick.invoke()
+                                    } ?: run{
+                                        errorButtonClick.invoke()
+                                    }
+                                },
                                 isCancellable = dataHolder.cancellable
                             )
                         }
@@ -54,7 +62,13 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 infoRes = dataHolder.errorResourceId?:-1,
                                 infoStr = dataHolder.errStr,
                                 positiveButtonStrRes = R.string.ok,
-                                positiveButtonClick = errorButtonClick,
+                                positiveButtonClick = {
+                                    getInterceptorLambda<T>()?.let {
+                                        if(!it.invoke(dataHolder)) errorButtonClick.invoke()
+                                    } ?: run{
+                                        errorButtonClick.invoke()
+                                    }
+                                },
                                 isCancellable = dataHolder.cancellable)
                         }
                         FailType.WARNING->{
@@ -62,7 +76,13 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 warningRes = dataHolder.errorResourceId?:-1,
                                 warningStr = dataHolder.errStr,
                                 positiveButtonStrRes = R.string.ok,
-                                positiveButtonClick = errorButtonClick,
+                                positiveButtonClick = {
+                                    getInterceptorLambda<T>()?.let {
+                                        if(!it.invoke(dataHolder)) errorButtonClick.invoke()
+                                    } ?: run{
+                                        errorButtonClick.invoke()
+                                    }
+                                },
                                 isCancellable = dataHolder.cancellable)
                         }
                     }
