@@ -15,13 +15,13 @@ interface CABFragment : DialogHost {
 
 fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=true,
                                                 dataHolder: DataHolder<T>,
-                                                errorBody : (errorStr:String,errorResId:Int) -> Unit,
-                                                errorButtonClick : () -> Unit,
-                                                bypassErrorHandling:Boolean,
-                                                bypassDisableCurrentPopupOnSuccess:Boolean,
+                                                errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
+                                                errorButtonClick : (() -> Unit)?=null,
+                                                bypassErrorHandling:Boolean=false,
+                                                bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                                 observeSuccessValueOnce:Boolean=false,
                                                 observeFailValueOnce:Boolean=false,
-                                                successBody : (data:T) -> Unit
+                                                successBody : ((data:T) -> Unit)?=null
 
 ){
     when(dataHolder){
@@ -35,13 +35,13 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                     if(!bypassDisableCurrentPopupOnSuccess) it.dismissCurrentDialog()
                 }
             }
-            successBody.invoke(dataHolder.data)
+            successBody?.invoke(dataHolder.data)
             dataHolder.setObserved()
         }
         is DataHolder.Fail ->{
             if(observeFailValueOnce && dataHolder.isObserved) return
             if(bypassErrorHandling){
-                errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
+                errorBody?.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
             }
             else{
                 if(showDialogsInFragment){
@@ -54,9 +54,9 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 positiveButtonStrRes = R.string.ok,
                                 positiveButtonClick = {
                                     getInterceptorLambda<T>()?.let {
-                                        if(!it.invoke(dataHolder)) errorButtonClick.invoke()
+                                        if(!it.invoke(dataHolder)) errorButtonClick?.invoke()
                                     } ?: run{
-                                        errorButtonClick.invoke()
+                                        errorButtonClick?.invoke()
                                     }
                                 },
                                 isCancellable = dataHolder.cancellable
@@ -69,9 +69,9 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 positiveButtonStrRes = R.string.ok,
                                 positiveButtonClick = {
                                     getInterceptorLambda<T>()?.let {
-                                        if(!it.invoke(dataHolder)) errorButtonClick.invoke()
+                                        if(!it.invoke(dataHolder)) errorButtonClick?.invoke()
                                     } ?: run{
-                                        errorButtonClick.invoke()
+                                        errorButtonClick?.invoke()
                                     }
                                 },
                                 isCancellable = dataHolder.cancellable)
@@ -83,9 +83,9 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 positiveButtonStrRes = R.string.ok,
                                 positiveButtonClick = {
                                     getInterceptorLambda<T>()?.let {
-                                        if(!it.invoke(dataHolder)) errorButtonClick.invoke()
+                                        if(!it.invoke(dataHolder)) errorButtonClick?.invoke()
                                     } ?: run{
-                                        errorButtonClick.invoke()
+                                        errorButtonClick?.invoke()
                                     }
                                 },
                                 isCancellable = dataHolder.cancellable)
@@ -139,13 +139,13 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
 
 fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
                                            liveData: LiveData<DataHolder<T>>,
-                                           errorBody : (errorStr:String,errorResId:Int) -> Unit = {_,_ -> },
-                                           errorButtonClick : () -> Unit = {},
+                                           errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
+                                           errorButtonClick : (() -> Unit)?=null,
                                            bypassErrorHandling:Boolean=false,
                                            bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                            observeSuccessValueOnce:Boolean=false,
                                            observeFailValueOnce:Boolean=false,
-                                           successBody : (data:T) -> Unit){
+                                           successBody : ((data:T) -> Unit)?=null){
     liveData.observe(this as LifecycleOwner, { dataHolder ->
         handleDataHolderResult(showDialogsInFragment,
             dataHolder,

@@ -13,19 +13,19 @@ interface CABActivity : DialogHost{
 }
 
 fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
-                                                errorBody : (errorStr:String,errorResId:Int) -> Unit,
-                                                errorButtonClick : () -> Unit,
-                                                bypassErrorHandling:Boolean,
-                                                bypassDisableCurrentPopupOnSuccess:Boolean,
+                                                errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
+                                                errorButtonClick : (() -> Unit)?=null,
+                                                bypassErrorHandling:Boolean=false,
+                                                bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                                 observeSuccessValueOnce:Boolean=false,
                                                 observeFailValueOnce:Boolean=false,
-                                                successBody : (data:T) -> Unit
+                                                successBody : ((data:T) -> Unit)?=null
 
 ){
     if(dataHolder is DataHolder.Success){
         if(observeSuccessValueOnce && dataHolder.isObserved) return
         if(!bypassDisableCurrentPopupOnSuccess) dismissCurrentDialog()
-        successBody.invoke(dataHolder.data)
+        successBody?.invoke(dataHolder.data)
         dataHolder.setObserved()
     }
 
@@ -33,7 +33,7 @@ fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
         if(observeFailValueOnce && dataHolder.isObserved) return
         dismissCurrentDialog()
         if(bypassErrorHandling){
-            errorBody.invoke(dataHolder.errStr,dataHolder.errorResourceId ?: -1)
+            errorBody?.invoke(dataHolder.errStr,dataHolder.errorResourceId ?: -1)
         }
         else{
             when(dataHolder.failType){
@@ -74,14 +74,14 @@ fun <T : Any>CABActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
 }
 
 fun <T : Any>CABActivity.observeDataHolder(liveData: LiveData<DataHolder<T>>,
-                                           errorBody : (errorStr:String,errorResId:Int) -> Unit = {_,_ -> },
-                                           errorButtonClick : () -> Unit = {},
+                                           errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
+                                           errorButtonClick : (() -> Unit)?=null,
                                            bypassErrorHandling:Boolean=false,
                                            bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                            observeSuccessValueOnce:Boolean=false,
                                            observeFailValueOnce:Boolean=false,
-                                           successBody : (data:T) -> Unit){
-    liveData.observe(this as LifecycleOwner, Observer {dataHolder ->
+                                           successBody : ((data:T) -> Unit)?=null){
+    liveData.observe(this as LifecycleOwner, {dataHolder ->
         handleDataHolderResult(dataHolder,
             errorBody,
             errorButtonClick,
