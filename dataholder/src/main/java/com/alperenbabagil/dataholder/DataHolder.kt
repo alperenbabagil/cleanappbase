@@ -49,7 +49,7 @@ fun <T : Any, R : Any> DataHolder<T>.handleSuccess(
     is DataHolder.Loading -> this
 }
 
-suspend fun <T : Any, R : Any> DataHolder<T>.handleSuccess(
+suspend fun <T : Any, R : Any> DataHolder<T>.handleSuccessSuspend(
     successBlock:
         suspend (dataHolder: DataHolder.Success<T>) -> R
 ): DataHolder<R> = when (this) {
