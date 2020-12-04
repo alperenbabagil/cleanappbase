@@ -10,11 +10,13 @@ import com.alperenbabagil.cleanappbase.detail.presentation.detailPresentationMod
 import com.alperenbabagil.cleanappbase.main.data.mainDataModule
 import com.alperenbabagil.cleanappbase.main.domain.mainDomainModule
 import com.alperenbabagil.cleanappbase.main.presentation.mainPresentationModule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class CABDemoApp : Application() {
 
+    @ExperimentalCoroutinesApi
     override fun onCreate() {
         super.onCreate()
         startKoin {

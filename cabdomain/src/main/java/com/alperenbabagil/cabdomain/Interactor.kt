@@ -2,6 +2,7 @@ package com.alperenbabagil.cabdomain
 
 import com.alperenbabagil.dataholder.DataHolder
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
 
 interface Interactor {
 
@@ -19,6 +20,14 @@ interface Interactor {
 
     interface SingleRetrieveInteractor<T : Any> : Interactor{
         suspend fun execute(): DataHolder<T>
+    }
+
+    interface SingleFlowInteractor<params : Params, T : Any> : Interactor {
+        suspend fun execute(params: params): Flow<DataHolder<T>>
+    }
+
+    interface SingleFlowRetrieveInteractor<T : Any> : Interactor{
+        suspend fun execute(): Flow<DataHolder<T>>
     }
 
     interface SingleSyncInteractor<params : Params, T : Any> : Interactor {

@@ -18,6 +18,7 @@ import com.alperenbabagil.cleanappbase.core.presentation.toPrettyString
 import com.alperenbabagil.cleanappbase.databinding.ProfileDetailFragmentBinding
 import com.alperenbabagil.cleanappbase.databinding.UserDetailItemRowBinding
 import com.alperenbabagil.cleanappbase.detail.domain.profiledetail.model.ProfileDetail
+import com.alperenbabagil.cleanappbase.detail.presentation.DetailViewModel
 import com.alperenbabagil.simpleanimationpopuplibrary.showErrorDialog
 import com.otaliastudios.elements.Adapter
 import com.otaliastudios.elements.Element
@@ -25,6 +26,7 @@ import com.otaliastudios.elements.Page
 import com.otaliastudios.elements.extensions.DataBindingPresenter
 import com.otaliastudios.elements.extensions.ListSource
 import kotlinx.android.synthetic.main.profile_detail_fragment.*
+import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 import java.util.*
@@ -83,7 +85,11 @@ class ProfileDetailFragment : CABDemoBaseFragment() {
             cabViewModel.getProfileDetail(userName, RequestResultType.FAIL,selectedDelay * 1000L)
         }
 
-        observeDataHolder(liveData = cabViewModel.profileDetailLiveData){
+        observeDataHolder(liveData = cabViewModel.profileDetailLiveData,interceptor = {
+            val sharedViewModel : DetailViewModel = getSharedViewModel(named<DetailViewModel>())
+            sharedViewModel.setCurrentProfileDetail(it)
+            false
+        }){
             fillDetail(it)
         }
 

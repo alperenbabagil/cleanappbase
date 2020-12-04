@@ -3,11 +3,14 @@ package com.alperenbabagil.cleanappbase.detail.presentation
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import androidx.viewpager.widget.ViewPager
+import com.alperenbabagil.cabpresentation.CABSAPFragment
 import com.alperenbabagil.cleanappbase.R
 import com.alperenbabagil.cleanappbase.core.presentation.AppNavigator
 import com.alperenbabagil.cleanappbase.core.presentation.CABDemoBaseActivity
 import com.alperenbabagil.cleanappbase.core.presentation.getExtra
 import com.alperenbabagil.cleanappbase.detail.presentation.changepp.ChangePPFragment
+import com.alperenbabagil.cleanappbase.detail.presentation.happiness.HappinessFragment
 import com.alperenbabagil.cleanappbase.detail.presentation.profiledetail.ProfileDetailFragment
 import com.alperenbabagil.dataholder.DataHolder
 import com.alperenbabagil.simpleanimationpopuplibrary.showErrorDialog
@@ -20,7 +23,7 @@ import org.koin.core.qualifier.named
 import timber.log.Timber
 
 
-class DetailActivity() : CABDemoBaseActivity() {
+class DetailActivity() : CABDemoBaseActivity(), ChangePPFragment.DrawHostFragmentHost {
 
     override val cabViewModel: DetailViewModel by viewModel(named<DetailViewModel>())
 
@@ -47,11 +50,41 @@ class DetailActivity() : CABDemoBaseActivity() {
                 .add(R.string.edit_pp,
                     ChangePPFragment::class.java,Bundler()
                         .putString(getString(R.string.userNameKey),userName).get())
+                .add(R.string.happiness,
+                    HappinessFragment::class.java,Bundler().get())
                 .create()
         )
 
+
+
         viewPager.adapter = adapter
-        viewPagerTab.setViewPager(viewPager)
+
+
+        viewPagerTab.setViewPager(viewPager.apply {
+            offscreenPageLimit=3
+        })
+
+//        viewPagerTab.setOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+//            override fun onPageScrolled(
+//                position: Int,
+//                positionOffset: Float,
+//                positionOffsetPixels: Int
+//            ) {
+//                viewPagerTab.clearFocus()
+//            }
+//
+//            override fun onPageSelected(position: Int) {
+////                adapter.getPage(position)?.let {
+////                    (it as? CABSAPFragment)?.onBackPressedCallback=
+////                }
+//                viewPagerTab.clearFocus()
+//            }
+//
+//            override fun onPageScrollStateChanged(state: Int) {
+//                viewPagerTab.clearFocus()
+//            }
+//
+//        })
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -64,5 +97,9 @@ class DetailActivity() : CABDemoBaseActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+    override fun focusOnDrawing() {
+        viewPager.currentItem=1
+    }
 
 }

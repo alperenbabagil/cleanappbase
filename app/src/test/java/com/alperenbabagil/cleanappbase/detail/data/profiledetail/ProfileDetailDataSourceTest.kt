@@ -43,7 +43,7 @@ class ProfileDetailDataSourceTest {
     fun setUp() = MockKAnnotations.init(this)
 
     @Test
-    fun `get data test`() {
+    fun `get profile detail test`() {
         val request = BaseRequest(
             ResponseTemplate(data= ProfileDetailDataTemplate(userName = "")))
 

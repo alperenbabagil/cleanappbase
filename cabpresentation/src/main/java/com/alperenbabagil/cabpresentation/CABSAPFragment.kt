@@ -15,7 +15,8 @@ interface CABSAPFragment : DialogHolderFragment {
     }
 }
 
-fun <T : Any>CABSAPFragment.handleDataHolderResult(showDialogsInFragment:Boolean=true,
+fun <T : Any>CABSAPFragment.handleDataHolderResult(interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
+                                                   showDialogsInFragment:Boolean=true,
                                                    dataHolder: DataHolder<T>,
                                                    errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
                                                    errorButtonClick : (() -> Unit)?=null,
@@ -26,6 +27,7 @@ fun <T : Any>CABSAPFragment.handleDataHolderResult(showDialogsInFragment:Boolean
                                                    successBody : ((data:T) -> Unit)?=null
 
 ){
+    if(interceptor?.invoke(dataHolder)==true) return
     when(dataHolder){
         is DataHolder.Success ->{
             if(observeSuccessValueOnce && dataHolder.isObserved) return
@@ -157,7 +159,8 @@ fun <T : Any>CABSAPFragment.handleDataHolderResult(showDialogsInFragment:Boolean
     }
 }
 
-fun <T : Any>CABSAPFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
+fun <T : Any>CABSAPFragment.observeDataHolder(interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
+                                              showDialogsInFragment:Boolean=true,
                                               liveData: LiveData<DataHolder<T>>,
                                               errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
                                               errorButtonClick : (() -> Unit)?=null,
@@ -167,7 +170,9 @@ fun <T : Any>CABSAPFragment.observeDataHolder(showDialogsInFragment:Boolean=true
                                               observeFailValueOnce:Boolean=false,
                                               successBody : ((data:T) -> Unit)?=null){
     liveData.observe(this as LifecycleOwner, { dataHolder ->
-        handleDataHolderResult(showDialogsInFragment,
+        handleDataHolderResult(
+            interceptor,
+            showDialogsInFragment,
             dataHolder,
             errorBody,
             errorButtonClick,

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.activity.OnBackPressedCallback
 import com.alperenbabagil.cabpresentation.observeDataHolder
 import com.alperenbabagil.cleanappbase.R
 import com.alperenbabagil.cleanappbase.core.domain.model.RequestResultType
@@ -14,11 +15,13 @@ import com.alperenbabagil.simpleanimationpopuplibrary.showErrorDialog
 import kotlinx.android.synthetic.main.profile_detail_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
-import py.alperenbabagil.imageeditfragmentlib.fragment.fragment.DrawOnFragmentStatus
+import py.alperenbabagil.imageeditfragmentlib.fragment.fragment.DrawOnFragmentHost
 import py.alperenbabagil.imageeditfragmentlib.fragment.fragment.ImageEditFragment
 
-class ChangePPFragment : CABDemoBaseFragment(),DrawOnFragmentStatus {
+class ChangePPFragment : CABDemoBaseFragment(),DrawOnFragmentHost {
     override val cabViewModel: ChangePPViewModel by viewModel(named<ChangePPViewModel>())
+
+    override var onBackPressedCallback: OnBackPressedCallback?=null
 
     private lateinit var userName: String
 
@@ -89,4 +92,16 @@ class ChangePPFragment : CABDemoBaseFragment(),DrawOnFragmentStatus {
 
     override fun drawingCompleted(success: Boolean, path: String?) {
     }
+
+    override fun unsavedChangesClose(fragmentTag: String) {
+        activity?.let {
+            (it as? DrawHostFragmentHost)?.focusOnDrawing()
+        }
+    }
+
+    interface DrawHostFragmentHost{
+        fun focusOnDrawing()
+    }
+
+
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.nitri.gauge.Gauge
+        android:id="@+id/gaugeView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        app:majorNickInterval="10"
+        app:maxValue="100"
+        app:minValue="0"
+        app:totalNicks="120"
+        app:valuePerNick="1"  />
+
+    <TextView
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="@string/happiness_expl"
+        app:layout_constraintTop_toBottomOf="@id/gaugeView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,7 +31,7 @@ class CABDemoApiCallAdapter : ApiCallAdapter {
                         }
                     } ?: DataHolder.Fail()
                 } else {
-                    DataHolder.Fail()
+                    DataHolder.Fail(errStr = it.errorBody()?.string().toString())
                 }
             } ?: DataHolder.Fail()
         } catch (e: Exception) {

@@ -10,6 +10,8 @@ import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.SpyK
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -39,6 +41,13 @@ class CABViewModelKtTest{
 
     @MockK
     lateinit var singleRetrieveInteractor : Interactor.SingleRetrieveInteractor<String>
+
+    @MockK
+    lateinit var singleFlowInteractor : Interactor.SingleFlowInteractor<Interactor.Params,String>
+
+    @MockK
+    lateinit var singleRetrieveFlowInteractor : Interactor.SingleFlowRetrieveInteractor<String>
+
 
     @Before
     fun setUp() = MockKAnnotations.init(this, relaxUnitFun = true)
@@ -106,4 +115,71 @@ class CABViewModelKtTest{
         assertEquals(singleRetrieveLiveDataValue,
             (singleRetrieveLiveData.value as DataHolder.Success).data)
     }
+
+    @Test
+    fun  `single flow interactor test`(){
+
+        val valueObserver : Observer<DataHolder<String>> = mockk(relaxUnitFun = true)
+
+        coEvery { singleFlowInteractor.execute(param) } coAnswers {
+           flow {
+               emit(DataHolder.Success(singleLiveDataValue))
+           }
+        }
+
+        singleLiveData.observeForever(valueObserver)
+
+        val loadingUUID= UUID.randomUUID().toString()
+
+        cabViewModel.execFlowInteractor(liveData = singleLiveData,
+            singleFlowInteractor = singleFlowInteractor,
+            params = param,
+            loadingUUID = loadingUUID
+        )
+
+        coVerify { valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })}
+
+        coVerify {  valueObserver.onChanged(DataHolder.Success(singleLiveDataValue))}
+
+        verifyOrder {
+            valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })
+            valueObserver.onChanged(DataHolder.Success(singleLiveDataValue))
+        }
+
+        assertEquals(singleLiveDataValue, (singleLiveData.value as DataHolder.Success).data)
+    }
+
+    @Test
+    fun  `single retrieve flow interactor test`(){
+
+        val valueObserver : Observer<DataHolder<String>> = mockk(relaxUnitFun = true)
+
+        coEvery { singleRetrieveFlowInteractor.execute() } coAnswers {
+            flow {
+                emit(DataHolder.Success(singleRetrieveLiveDataValue))
+            }
+        }
+
+        singleRetrieveLiveData.observeForever(valueObserver)
+
+        val loadingUUID= UUID.randomUUID().toString()
+
+        cabViewModel.execFlowRetrieveInteractor(liveData = singleRetrieveLiveData,
+            singleRetrieveFlowInteractor = singleRetrieveFlowInteractor,
+            loadingUUID = loadingUUID
+        )
+
+        coVerify { valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })}
+
+        coVerify {  valueObserver.onChanged(DataHolder.Success(singleRetrieveLiveDataValue))}
+
+        verifyOrder {
+            valueObserver.onChanged(DataHolder.Loading().apply { tag=loadingUUID })
+            valueObserver.onChanged(DataHolder.Success(singleRetrieveLiveDataValue))
+        }
+
+        assertEquals(singleRetrieveLiveDataValue,
+            (singleRetrieveLiveData.value as DataHolder.Success).data)
+    }
+
 }
