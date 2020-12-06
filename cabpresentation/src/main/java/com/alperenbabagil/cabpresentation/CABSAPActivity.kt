@@ -15,8 +15,8 @@ interface CABSAPActivity : DialogHolderActivity{
 }
 
 fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
-                                                   errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
-                                                   errorButtonClick : (() -> Unit)?=null,
+                                                   errorBody : ((dataHolder: DataHolder.Fail) -> Unit)?=null,
+                                                   errorButtonClick : ((dataHolder: DataHolder.Fail) -> Unit)?=null,
                                                    bypassErrorHandling:Boolean=false,
                                                    bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                                    observeSuccessValueOnce:Boolean=false,
@@ -37,7 +37,7 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
 
         currentDialog?.dismiss()
         if(bypassErrorHandling){
-            errorBody?.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
+            errorBody?.invoke(dataHolder)
         }
         else{
             when(dataHolder.failType){
@@ -49,9 +49,9 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                         positiveButtonStrRes = R.string.ok,
                         positiveButtonClick = {
                             getInterceptorLambda<T>()?.let {
-                                if(!it.invoke(dataHolder)) errorButtonClick?.invoke()
+                                if(!it.invoke(dataHolder)) errorButtonClick?.invoke(dataHolder)
                             } ?: run{
-                                errorButtonClick?.invoke()
+                                errorButtonClick?.invoke(dataHolder)
                             }
                         },
                         isCancellable = dataHolder.cancellable
@@ -64,9 +64,9 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                         positiveButtonStrRes = R.string.ok,
                         positiveButtonClick = {
                             getInterceptorLambda<T>()?.let {
-                                if(!it.invoke(dataHolder)) errorButtonClick?.invoke()
+                                if(!it.invoke(dataHolder)) errorButtonClick?.invoke(dataHolder)
                             } ?: run{
-                                errorButtonClick?.invoke()
+                                errorButtonClick?.invoke(dataHolder)
                             }
                         },
                         isCancellable = dataHolder.cancellable)
@@ -78,9 +78,9 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                         positiveButtonStrRes = R.string.ok,
                         positiveButtonClick = {
                             getInterceptorLambda<T>()?.let {
-                                if(!it.invoke(dataHolder)) errorButtonClick?.invoke()
+                                if(!it.invoke(dataHolder)) errorButtonClick?.invoke(dataHolder)
                             } ?: run{
-                                errorButtonClick?.invoke()
+                                errorButtonClick?.invoke(dataHolder)
                             }
                         },
                         isCancellable = dataHolder.cancellable)
@@ -96,8 +96,8 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
 }
 
 fun <T : Any>CABSAPActivity.observeDataHolder(liveData: LiveData<DataHolder<T>>,
-                                              errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
-                                              errorButtonClick : (() -> Unit)?=null,
+                                              errorBody : ((dataHolder: DataHolder.Fail) -> Unit)?=null,
+                                              errorButtonClick : ((dataHolder: DataHolder.Fail) -> Unit)?=null,
                                               bypassErrorHandling:Boolean=false,
                                               bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                               observeSuccessValueOnce:Boolean=false,

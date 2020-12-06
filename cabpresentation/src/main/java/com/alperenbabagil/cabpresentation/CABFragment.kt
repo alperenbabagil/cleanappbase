@@ -15,8 +15,8 @@ interface CABFragment : DialogHost {
 
 fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=true,
                                                 dataHolder: DataHolder<T>,
-                                                errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
-                                                errorButtonClick : (() -> Unit)?=null,
+                                                errorBody : ((DataHolder.Fail) -> Unit)?=null,
+                                                errorButtonClick : ((DataHolder.Fail) -> Unit)?=null,
                                                 bypassErrorHandling:Boolean=false,
                                                 bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                                 observeSuccessValueOnce:Boolean=false,
@@ -41,7 +41,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
         is DataHolder.Fail ->{
             if(observeFailValueOnce && dataHolder.isObserved) return
             if(bypassErrorHandling){
-                errorBody?.invoke(dataHolder.errStr,dataHolder.errorResourceId?: -1)
+                errorBody?.invoke(dataHolder)
             }
             else{
                 if(showDialogsInFragment){
@@ -54,9 +54,9 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 positiveButtonStrRes = R.string.ok,
                                 positiveButtonClick = {
                                     getInterceptorLambda<T>()?.let {
-                                        if(!it.invoke(dataHolder)) errorButtonClick?.invoke()
+                                        if(!it.invoke(dataHolder)) errorButtonClick?.invoke(dataHolder)
                                     } ?: run{
-                                        errorButtonClick?.invoke()
+                                        errorButtonClick?.invoke(dataHolder)
                                     }
                                 },
                                 isCancellable = dataHolder.cancellable
@@ -69,9 +69,9 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 positiveButtonStrRes = R.string.ok,
                                 positiveButtonClick = {
                                     getInterceptorLambda<T>()?.let {
-                                        if(!it.invoke(dataHolder)) errorButtonClick?.invoke()
+                                        if(!it.invoke(dataHolder)) errorButtonClick?.invoke(dataHolder)
                                     } ?: run{
-                                        errorButtonClick?.invoke()
+                                        errorButtonClick?.invoke(dataHolder)
                                     }
                                 },
                                 isCancellable = dataHolder.cancellable)
@@ -83,9 +83,9 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 positiveButtonStrRes = R.string.ok,
                                 positiveButtonClick = {
                                     getInterceptorLambda<T>()?.let {
-                                        if(!it.invoke(dataHolder)) errorButtonClick?.invoke()
+                                        if(!it.invoke(dataHolder)) errorButtonClick?.invoke(dataHolder)
                                     } ?: run{
-                                        errorButtonClick?.invoke()
+                                        errorButtonClick?.invoke(dataHolder)
                                     }
                                 },
                                 isCancellable = dataHolder.cancellable)
@@ -100,7 +100,9 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 errorRes = dataHolder.errorResourceId?:-1,
                                 errorStr = dataHolder.errStr,
                                 positiveButtonStrRes = R.string.ok,
-                                positiveButtonClick = errorButtonClick,
+                                positiveButtonClick = {
+                                    errorButtonClick?.invoke(dataHolder)
+                                },
                                 isCancellable = dataHolder.cancellable
                             )
                         }
@@ -109,7 +111,9 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 infoRes = dataHolder.errorResourceId?:-1,
                                 infoStr = dataHolder.errStr,
                                 positiveButtonStrRes = R.string.ok,
-                                positiveButtonClick = errorButtonClick,
+                                positiveButtonClick = {
+                                    errorButtonClick?.invoke(dataHolder)
+                                },
                                 isCancellable = dataHolder.cancellable)
                         }
                         FailType.WARNING->{
@@ -117,7 +121,9 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                 warningRes = dataHolder.errorResourceId?:-1,
                                 warningStr = dataHolder.errStr,
                                 positiveButtonStrRes = R.string.ok,
-                                positiveButtonClick = errorButtonClick,
+                                positiveButtonClick = {
+                                    errorButtonClick?.invoke(dataHolder)
+                                },
                                 isCancellable = dataHolder.cancellable)
                         }
                     }
@@ -139,8 +145,8 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
 
 fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
                                            liveData: LiveData<DataHolder<T>>,
-                                           errorBody : ((errorStr:String,errorResId:Int) -> Unit)?=null,
-                                           errorButtonClick : (() -> Unit)?=null,
+                                           errorBody : ((DataHolder.Fail) -> Unit)?=null,
+                                           errorButtonClick : ((DataHolder.Fail) -> Unit)?=null,
                                            bypassErrorHandling:Boolean=false,
                                            bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                            observeSuccessValueOnce:Boolean=false,
