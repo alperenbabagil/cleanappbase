@@ -19,10 +19,12 @@ fun <T : Any> CABActivity.handleDataHolderResult(
     bypassErrorHandling: Boolean = false,
     bypassDisableCurrentPopupOnSuccess: Boolean = false,
     observeSuccessValueOnce: Boolean = false,
+    interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
     observeFailValueOnce: Boolean = false,
     successBody: ((data: T) -> Unit)? = null
 
 ) {
+    if(interceptor?.invoke(dataHolder)==true) return
     if (dataHolder is DataHolder.Success) {
         if (observeSuccessValueOnce && dataHolder.isObserved) return
         if (!bypassDisableCurrentPopupOnSuccess) dismissCurrentDialog()
@@ -90,6 +92,7 @@ fun <T : Any> CABActivity.observeDataHolder(
     bypassErrorHandling: Boolean = false,
     bypassDisableCurrentPopupOnSuccess: Boolean = false,
     observeSuccessValueOnce: Boolean = false,
+    interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
     observeFailValueOnce: Boolean = false,
     successBody: ((data: T) -> Unit)? = null
 ) {
@@ -101,6 +104,7 @@ fun <T : Any> CABActivity.observeDataHolder(
             bypassErrorHandling,
             bypassDisableCurrentPopupOnSuccess,
             observeSuccessValueOnce,
+            interceptor,
             observeFailValueOnce,
             successBody
         )

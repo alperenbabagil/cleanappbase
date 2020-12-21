@@ -20,10 +20,12 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                                 bypassErrorHandling:Boolean=false,
                                                 bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                                 observeSuccessValueOnce:Boolean=false,
+                                                interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
                                                 observeFailValueOnce:Boolean=false,
                                                 successBody : ((data:T) -> Unit)?=null
 
 ){
+    if(interceptor?.invoke(dataHolder)==true) return
     when(dataHolder){
         is DataHolder.Success ->{
             if(observeSuccessValueOnce && dataHolder.isObserved) return
@@ -150,6 +152,7 @@ fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
                                            bypassErrorHandling:Boolean=false,
                                            bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                            observeSuccessValueOnce:Boolean=false,
+                                           interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
                                            observeFailValueOnce:Boolean=false,
                                            successBody : ((data:T) -> Unit)?=null){
     liveData.observe(this as LifecycleOwner, { dataHolder ->
@@ -160,6 +163,7 @@ fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
             bypassErrorHandling,
             bypassDisableCurrentPopupOnSuccess,
             observeSuccessValueOnce,
+            interceptor,
             observeFailValueOnce,
             successBody)
     })
