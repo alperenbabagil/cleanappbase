@@ -21,6 +21,7 @@ fun <T : Any> CABActivity.handleDataHolderResult(
     observeSuccessValueOnce: Boolean = false,
     interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
     observeFailValueOnce: Boolean = false,
+    showLoadingDialog:Boolean=true,
     successBody: ((data: T) -> Unit)? = null
 
 ) {
@@ -80,8 +81,10 @@ fun <T : Any> CABActivity.handleDataHolderResult(
         dataHolder.setObserved()
     }
     if (dataHolder is DataHolder.Loading) {
-        dismissCurrentDialog()
-        showLoadingDialog(dataHolder = dataHolder)
+        if (showLoadingDialog) {
+            dismissCurrentDialog()
+            showLoadingDialog(dataHolder = dataHolder)
+        }
     }
 }
 
@@ -94,6 +97,7 @@ fun <T : Any> CABActivity.observeDataHolder(
     observeSuccessValueOnce: Boolean = false,
     interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
     observeFailValueOnce: Boolean = false,
+    showLoadingDialog:Boolean=true,
     successBody: ((data: T) -> Unit)? = null
 ) {
     liveData.observe(this as LifecycleOwner, { dataHolder ->
@@ -106,6 +110,7 @@ fun <T : Any> CABActivity.observeDataHolder(
             observeSuccessValueOnce,
             interceptor,
             observeFailValueOnce,
+            showLoadingDialog,
             successBody
         )
     })

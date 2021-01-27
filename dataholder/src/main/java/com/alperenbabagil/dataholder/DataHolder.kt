@@ -14,6 +14,7 @@ sealed class DataHolder<out T : Any> {
         fun setObserved(){
             isObserved=true
         }
+
     }
 
     data class Fail(
@@ -56,4 +57,30 @@ suspend fun <T : Any, R : Any> DataHolder<T>.handleSuccessSuspend(
     is DataHolder.Success<T> -> DataHolder.Success(successBlock.invoke(this))
     is DataHolder.Fail -> this
     is DataHolder.Loading -> this
+}
+
+fun <T : Any>safeDataHolderExecutor(errorResourceId: Int? = null,
+                                    errStr: String = DEFAULT_ERROR_STR,
+                                    error: BaseError? = null,
+                                    failType: FailType = FailType.ERROR,
+                                    cancellable: Boolean = false,
+                                    block: () -> T) : DataHolder<T>{
+    return try{
+        DataHolder.Success(block.invoke())
+    }catch (e:Exception){
+        DataHolder.Fail(errorResourceId,errStr,error ?: BaseError(e),failType,cancellable)
+    }
+}
+
+suspend fun <T : Any>safeDataHolderExecutorSuspend(errorResourceId: Int? = null,
+                                    errStr: String = DEFAULT_ERROR_STR,
+                                    error: BaseError? = null,
+                                    failType: FailType = FailType.ERROR,
+                                    cancellable: Boolean = false,
+                                    block: suspend () -> T) : DataHolder<T>{
+    return try{
+        DataHolder.Success(block.invoke())
+    }catch (e:Exception){
+        DataHolder.Fail(errorResourceId,errStr,error ?: BaseError(e),failType,cancellable)
+    }
 }

@@ -6,6 +6,7 @@ import com.alperenbabagil.cleanappbase.core.data.model.BaseRequest
 import com.alperenbabagil.cleanappbase.detail.domain.happiness.model.HappinessResult
 import com.alperenbabagil.cleanappbase.detail.domain.profiledetail.model.ProfileDetail
 import com.alperenbabagil.dataholder.DataHolder
+import com.alperenbabagil.dataholder.safeDataHolderExecutor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

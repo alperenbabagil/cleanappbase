@@ -1,3 +1,4 @@
+
 package com.alperenbabagil.cabpresentation
 
 import androidx.lifecycle.LifecycleOwner
@@ -22,6 +23,7 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
                                                    observeSuccessValueOnce:Boolean=false,
                                                    interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
                                                    observeFailValueOnce:Boolean=false,
+                                                   showLoadingDialog:Boolean=true,
                                                    successBody: ((data: T) -> Unit)? = null
 
 ){
@@ -29,7 +31,6 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
     when(dataHolder){
         is DataHolder.Success ->{
             if(observeSuccessValueOnce && dataHolder.isObserved) return
-
             if(!bypassDisableCurrentPopupOnSuccess) currentDialog?.dismiss()
             successBody?.invoke(dataHolder.data)
             dataHolder.setObserved()
@@ -92,7 +93,7 @@ fun <T : Any>CABSAPActivity.handleDataHolderResult(dataHolder: DataHolder<T>,
             dataHolder.setObserved()
         }
         is DataHolder.Loading -> {
-            showDHLoadingDialog(dataHolder = dataHolder)
+            if(showLoadingDialog) showDHLoadingDialog(dataHolder = dataHolder)
         }
     }
 }
@@ -105,6 +106,7 @@ fun <T : Any>CABSAPActivity.observeDataHolder(liveData: LiveData<DataHolder<T>>,
                                               observeSuccessValueOnce:Boolean=false,
                                               interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
                                               observeFailValueOnce:Boolean=false,
+                                              showLoadingDialog:Boolean=true,
                                               successBody : ((data:T) -> Unit)?=null){
     liveData.observe(this as LifecycleOwner, { dataHolder ->
         handleDataHolderResult(dataHolder,
@@ -115,6 +117,7 @@ fun <T : Any>CABSAPActivity.observeDataHolder(liveData: LiveData<DataHolder<T>>,
             observeSuccessValueOnce,
             interceptor,
             observeFailValueOnce,
+            showLoadingDialog,
             successBody)
     })
 }

@@ -15,15 +15,16 @@ interface CABSAPFragment : DialogHolderFragment {
     }
 }
 
-fun <T : Any>CABSAPFragment.handleDataHolderResult(interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
+fun <T : Any>CABSAPFragment.handleDataHolderResult(dataHolder: DataHolder<T>,
+                                                   interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
                                                    showDialogsInFragment:Boolean=true,
-                                                   dataHolder: DataHolder<T>,
                                                    errorBody : ((dataHolder: DataHolder.Fail) -> Unit)?=null,
                                                    errorButtonClick : ((dataHolder: DataHolder.Fail) -> Unit)?=null,
                                                    bypassErrorHandling:Boolean=false,
                                                    bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                                    observeSuccessValueOnce:Boolean=false,
                                                    observeFailValueOnce:Boolean=false,
+                                                   showLoadingDialog:Boolean=true,
                                                    successBody : ((data:T) -> Unit)?=null
 
 ){
@@ -148,38 +149,42 @@ fun <T : Any>CABSAPFragment.handleDataHolderResult(interceptor: ((dataHolder: Da
             dataHolder.setObserved()
         }
         is DataHolder.Loading ->{
-            if(showDialogsInFragment){
-                showDHLoadingDialog(dataHolder = dataHolder)
-            }
-            else{
-                ((this as? Fragment)?.requireActivity() as? CABSAPActivity)?.
-                showDHLoadingDialog(dataHolder = dataHolder)
+            if(showLoadingDialog){
+                if(showDialogsInFragment){
+                    showDHLoadingDialog(dataHolder = dataHolder)
+                }
+                else{
+                    ((this as? Fragment)?.requireActivity() as? CABSAPActivity)?.
+                    showDHLoadingDialog(dataHolder = dataHolder)
+                }
             }
         }
     }
 }
 
-fun <T : Any>CABSAPFragment.observeDataHolder(interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
+fun <T : Any>CABSAPFragment.observeDataHolder(liveData: LiveData<DataHolder<T>>,
+                                              interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
                                               showDialogsInFragment:Boolean=true,
-                                              liveData: LiveData<DataHolder<T>>,
                                               errorBody : ((dataHolder: DataHolder.Fail) -> Unit)?=null,
                                               errorButtonClick : ((dataHolder: DataHolder.Fail) -> Unit)?=null,
                                               bypassErrorHandling:Boolean=false,
                                               bypassDisableCurrentPopupOnSuccess:Boolean=false,
                                               observeSuccessValueOnce:Boolean=false,
                                               observeFailValueOnce:Boolean=false,
+                                              showLoadingDialog:Boolean=true,
                                               successBody : ((data:T) -> Unit)?=null){
     liveData.observe(this as LifecycleOwner, { dataHolder ->
         handleDataHolderResult(
+            dataHolder,
             interceptor,
             showDialogsInFragment,
-            dataHolder,
             errorBody,
             errorButtonClick,
             bypassErrorHandling,
             bypassDisableCurrentPopupOnSuccess,
             observeSuccessValueOnce,
             observeFailValueOnce,
+            showLoadingDialog,
             successBody)
     })
 }

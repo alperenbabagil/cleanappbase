@@ -13,8 +13,8 @@ interface CABFragment : DialogHost {
     }
 }
 
-fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=true,
-                                                dataHolder: DataHolder<T>,
+fun <T : Any>CABFragment.handleDataHolderResult(dataHolder: DataHolder<T>,
+                                                showDialogsInFragment:Boolean=true,
                                                 errorBody : ((DataHolder.Fail) -> Unit)?=null,
                                                 errorButtonClick : ((DataHolder.Fail) -> Unit)?=null,
                                                 bypassErrorHandling:Boolean=false,
@@ -22,6 +22,7 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
                                                 observeSuccessValueOnce:Boolean=false,
                                                 interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
                                                 observeFailValueOnce:Boolean=false,
+                                                showLoadingDialog:Boolean=true,
                                                 successBody : ((data:T) -> Unit)?=null
 
 ){
@@ -134,19 +135,21 @@ fun <T : Any>CABFragment.handleDataHolderResult(showDialogsInFragment:Boolean=tr
             dataHolder.setObserved()
         }
         is DataHolder.Loading ->{
-            if(showDialogsInFragment){
-                showLoadingDialog(dataHolder = dataHolder)
-            }
-            else{
-                ((this as? Fragment)?.requireActivity() as? CABActivity)?.
+            if(showLoadingDialog){
+                if(showDialogsInFragment){
                     showLoadingDialog(dataHolder = dataHolder)
+                }
+                else{
+                    ((this as? Fragment)?.requireActivity() as? CABActivity)?.
+                    showLoadingDialog(dataHolder = dataHolder)
+                }
             }
         }
     }
 }
 
-fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
-                                           liveData: LiveData<DataHolder<T>>,
+fun <T : Any>CABFragment.observeDataHolder(liveData: LiveData<DataHolder<T>>,
+                                           showDialogsInFragment:Boolean=true,
                                            errorBody : ((DataHolder.Fail) -> Unit)?=null,
                                            errorButtonClick : ((DataHolder.Fail) -> Unit)?=null,
                                            bypassErrorHandling:Boolean=false,
@@ -154,10 +157,12 @@ fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
                                            observeSuccessValueOnce:Boolean=false,
                                            interceptor: ((dataHolder: DataHolder<T>) -> Boolean)?=null,
                                            observeFailValueOnce:Boolean=false,
+                                           showLoadingDialog:Boolean=true,
                                            successBody : ((data:T) -> Unit)?=null){
     liveData.observe(this as LifecycleOwner, { dataHolder ->
-        handleDataHolderResult(showDialogsInFragment,
+        handleDataHolderResult(
             dataHolder,
+            showDialogsInFragment,
             errorBody,
             errorButtonClick,
             bypassErrorHandling,
@@ -165,6 +170,7 @@ fun <T : Any>CABFragment.observeDataHolder(showDialogsInFragment:Boolean=true,
             observeSuccessValueOnce,
             interceptor,
             observeFailValueOnce,
+            showLoadingDialog,
             successBody)
     })
 }
