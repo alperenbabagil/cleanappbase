@@ -39,6 +39,8 @@ sealed class DataHolder<out T : Any> {
         var progress: Int = 0,
         var tag: String = UUID.randomUUID().toString()
     ) : DataHolder<Nothing>()
+
+    object Initial : DataHolder<Nothing>()
 }
 
 fun <T : Any, R : Any> DataHolder<T>.handleSuccess(
@@ -48,6 +50,7 @@ fun <T : Any, R : Any> DataHolder<T>.handleSuccess(
     is DataHolder.Success<T> -> DataHolder.Success(successBlock.invoke(this))
     is DataHolder.Fail -> this
     is DataHolder.Loading -> this
+    is DataHolder.Initial -> this
 }
 
 suspend fun <T : Any, R : Any> DataHolder<T>.handleSuccessSuspend(
@@ -57,6 +60,7 @@ suspend fun <T : Any, R : Any> DataHolder<T>.handleSuccessSuspend(
     is DataHolder.Success<T> -> DataHolder.Success(successBlock.invoke(this))
     is DataHolder.Fail -> this
     is DataHolder.Loading -> this
+    is DataHolder.Initial -> this
 }
 
 fun <T : Any>safeDataHolderExecutor(errorResourceId: Int? = null,
