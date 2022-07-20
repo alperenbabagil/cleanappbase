@@ -39,7 +39,7 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
                 groupId = 'com.github.alperenbabagil'
-                artifactId = 'cabdata'
+                //artifactId = 'cabdata'
                 version = library_version
                 //artifact(sourcesJar)
             }
