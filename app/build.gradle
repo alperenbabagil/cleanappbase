@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: "$maven_publish"
+//apply plugin: "$maven_publish"
 //group = 'com.github.alperenbabagil'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -74,3 +74,17 @@ dependencies {
     implementation 'com.github.alperenbabagil:imageeditfragment:1.2.5'
     implementation 'com.github.Pygmalion69:Gauge:1.5.2'
 }
+
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            release(MavenPublication) {
+//                from components.release
+//                groupId = 'com.github.alperenbabagil'
+//                //artifactId = 'cabdata'
+//                version = library_version
+//                //artifact(sourcesJar)
+//            }
+//        }
+//    }
+//}
