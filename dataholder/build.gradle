@@ -1,19 +1,16 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "$maven_publish"
 group = 'com.github.alperenbabagil'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion android_version
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion android_version
         consumerProguardFiles "consumer-rules.pro"
     }
 
