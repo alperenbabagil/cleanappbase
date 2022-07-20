@@ -1,5 +1,5 @@
 before_script:
-  chmod +x gradlew
+  - chmod +x gradlew
 jdk:
   - openjdk11
 install:
