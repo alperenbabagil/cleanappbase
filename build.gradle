@@ -4,7 +4,7 @@ buildscript {
     ext.kotlin_version = '1.6.21'
     ext.android_version = 32
     ext.maven_publish = 'maven-publish'
-    ext.library_version = "0.1.8"
+    ext.library_version = "0.1.9"
     repositories {
         google()
         jcenter()
